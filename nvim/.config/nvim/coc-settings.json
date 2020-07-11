@@ -1,0 +1,26 @@
+{
+	"suggest.maxCompleteItemCount": 500,
+	"codeLens.enable": true,
+	"languageserver": {
+		"elixir": {
+			"command": "~/.vscode-oss/extensions/jakebecker.elixir-ls-0.5.0/elixir-ls-release/language_server.sh",
+			"filetypes": [
+				"elixir",
+				"eelixir"
+			]
+		},
+		"elmLS": {
+			"command": "elm-language-server",
+			"filetypes": [
+				"elm"
+			],
+			"rootPatterns": [
+				"elm.json"
+			],
+			"initializationOptions": {
+				"elmAnalyseTrigger": "change"
+			}
+		}
+	},
+	"suggest.noselect": false
+}
