@@ -210,4 +210,9 @@ compinit
 #Goal: skim fuzzy finder
 #Source:https://stackoverflow.com/questions/49207381/how-to-solve-ctrl-t-key-binding-issue-for-fzf
 source "/usr/share/skim/key-bindings.zsh"
+### PYENV
+export PATH="/home/gus_new/.pyenv/bin:$PATH"
+eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"
 ### End of manually added part
+
