@@ -258,14 +258,21 @@ autocmd vimenter * colorscheme gruvbox
 set termguicolors
 "gruvbox end
 
-"Auto-formats files when saving with CoC Language Server Protocol
-:autocmd BufWritePre *.* :Format
 
 "Will almost auto read file if you type  :e
 set autoread 
 
-"Coc plugins
+"CoC related: ***************************************************************
+"
+"COC: Auto-formats files when saving with CoC Language Server Protocol
+:autocmd BufWritePre *.* :Format
+
+"COC: Plugins
 let g:coc_global_extensions=['coc-explorer','coc-rust-analyzer','coc-tsserver','coc-prettier','coc-json','coc-eslint','coc-css','coc-python','coc-pyright']
+
+"*****************************************************************************
+
+
 
 "*****************************************************************************
 "" Self made: FZF
