@@ -30,7 +30,7 @@ Plug 'airblade/vim-gitgutter'
 Plug 'tpope/vim-fugitive'
 
 "Testing capabilities
-Plug 'janko/vim-test'
+Plug 'vim-test/vim-test'
 
 "Time management
 Plug 'wakatime/vim-wakatime'"
@@ -268,11 +268,14 @@ set autoread
 :autocmd BufWritePre *.* :Format
 
 "COC: Plugins
-let g:coc_global_extensions=['coc-explorer','coc-rust-analyzer','coc-tsserver','coc-prettier','coc-json','coc-eslint','coc-css','coc-python','coc-pyright']
+let g:coc_global_extensions=['coc-explorer','coc-rust-analyzer','coc-tsserver','coc-prettier','coc-json','coc-eslint','coc-css','coc-python']
 
 "*****************************************************************************
 
-
+"*********** VIM TEST PLUGING
+" make test commands execute using dispatch.vim
+let test#strategy = "neovim"
+"***********
 
 "*****************************************************************************
 "" Self made: FZF
