@@ -16,6 +16,6 @@
     }
   },
   "suggest.noselect": false,
-  "python.jediEnabled": false
+  "python.jediEnabled": false,
+  "python.venvPath": "~/.local/share/virtualenvs/"
 }
-

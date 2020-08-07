@@ -265,7 +265,7 @@ set termguicolors
 set autoread 
 
 "Coc plugins
-let g:coc_global_extensions=['coc-explorer','coc-rust-analyzer','coc-tsserver','coc-prettier','coc-json','coc-eslint','coc-css','coc-python']
+let g:coc_global_extensions=['coc-explorer','coc-rust-analyzer','coc-tsserver','coc-prettier','coc-json','coc-eslint','coc-css','coc-python','coc-pyright']
 
 "*****************************************************************************
 "" Self made: FZF
