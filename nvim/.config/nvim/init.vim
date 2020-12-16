@@ -15,6 +15,12 @@ Plug 'andys8/vim-elm-syntax'
 "Support for Rust
 Plug 'rust-lang/rust.vim'
 
+"Support for Clojure
+Plug 'Olical/conjure'
+
+Plug 'eraserhd/parinfer-rust', {'do':
+        \  'cargo build --release'}
+
 "Support for relative and absolute line numbering
 Plug 'jeffkreeftmeijer/vim-numbertoggle'
 
