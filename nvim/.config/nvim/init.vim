@@ -46,55 +46,30 @@ Plug 'jiangmiao/auto-pairs'
 "Ranger file explorer
 Plug 'kevinhwang91/rnvimr', {'do': 'make sync'}
 
+"Clojure stuff:
+
+Plug 'guns/vim-sexp'
+Plug 'tpope/vim-sexp-mappings-for-regular-people'
+Plug 'luochen1990/rainbow'
+let g:rainbow_Active = "1"
+
+Plug 'guns/vim-sexp',    {'for': 'clojure'}
+Plug 'liquidz/vim-iced', {'for': 'clojure'}
+
 call plug#end()
 
-source ~/.config/nvim/coccfg.vim
+source ~/.config/nvim/001-coc.vim
 
-"*****************************************************************************
-"" Plugin: Vim-Test default settings
-"*****************************************************************************
-
-" these "Ctrl mappings" work well when Caps Lock is mapped to Ctrl
-nmap <silent> t<C-n> :TestNearest<CR>
-nmap <silent> t<C-f> :TestFile<CR>
-nmap <silent> t<C-s> :TestSuite<CR>
-nmap <silent> t<C-l> :TestLast<CR>
-nmap <silent> t<C-g> :TestVisit<CR>
+source ~/.config/nvim/002-vimtest.vim
 
 "Ranger-like file navigation
-source $HOME/.config/nvim/plug-config/rnvimr.vim
+source ~/.config/nvim/plug-config/rnvimr.vim
 
-"*****************************************************************************
-"" Self made
-"*****************************************************************************
-set mouse=a
-set number relativenumber
-set foldlevelstart=1
-set foldmethod=syntax
-set ignorecase
-set smartcase
-set noswapfile
-set foldopen+=jump
-set clipboard+=unnamedplus
-let g:airline#extensions#tabline#enabled = 1
+source ~/.config/nvim/003-general.vim
 
-"For gruvbox
-let g:gruvbox_italic=1
-autocmd vimenter * colorscheme gruvbox
-set termguicolors
-"gruvbox end
+source ~/.config/nvim/004-gruvbox.vim
 
+source ~/.config/nvim/005-fzf.vim
 
-"Will almost auto read file if you type  :e
-set autoread 
-
-"*********** VIM TEST PLUG IN
-" make test commands execute using dispatch.vim
-let test#strategy = "neovim"
-"***********
-
-"*****************************************************************************
-"" Self made: FZF
-"*****************************************************************************
-nmap <unique> <C-p> :SK<CR>
-
+"Clojure:
+let g:iced_enable_default_key_mappings = v:true
