@@ -3,6 +3,12 @@ call plug#begin()
 "Support for language server
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
+"Easy motion
+Plug 'easymotion/vim-easymotion'
+
+"Better defaults
+Plug 'tpope/vim-sensible'
+
 "Support for Elixir
 Plug 'elixir-editors/vim-elixir'
 
@@ -17,9 +23,6 @@ Plug 'rust-lang/rust.vim'
 
 "Support for Clojure
 Plug 'Olical/conjure'
-
-Plug 'eraserhd/parinfer-rust', {'do':
-        \  'cargo build --release'}
 
 "Support for relative and absolute line numbering
 Plug 'jeffkreeftmeijer/vim-numbertoggle'
@@ -70,6 +73,11 @@ nmap <silent> t<C-g> :TestVisit<CR>
 "Ranger-like file navigation
 source $HOME/.config/nvim/plug-config/rnvimr.vim
 
+"****************************************************************************
+"* Plugin: Vim-easymotion
+let g:EasyMotion_smartcase = 1
+"****************************************************************************
+
 "*****************************************************************************
 "" Self made
 "*****************************************************************************
@@ -83,6 +91,11 @@ set noswapfile
 set foldopen+=jump
 set clipboard+=unnamedplus
 let g:airline#extensions#tabline#enabled = 1
+
+nnoremap <,> <Nop>
+let mapleader=","
+
+set cursorline
 
 "For gruvbox
 let g:gruvbox_italic=1

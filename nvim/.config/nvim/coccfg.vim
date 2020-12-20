@@ -185,6 +185,6 @@ let g:tagbar_type_elixir = {
 :autocmd BufWritePre *.* :Format
 
 "COC: Plugins
-let g:coc_global_extensions=['coc-explorer','coc-rust-analyzer','coc-tsserver','coc-prettier','coc-json','coc-eslint','coc-css','coc-python']
+let g:coc_global_extensions=['coc-explorer','coc-rust-analyzer','coc-tsserver','coc-prettier','coc-json','coc-eslint','coc-css','coc-python','coc-conjure']
 
 "*****************************************************************************
