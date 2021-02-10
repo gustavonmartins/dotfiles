@@ -41,8 +41,6 @@ Plug 'tpope/vim-fugitive'
 "Testing capabilities
 Plug 'vim-test/vim-test'
 
-"Time management
-Plug 'wakatime/vim-wakatime'"
 
 "Makes menu bar under look nicer
 Plug 'vim-airline/vim-airline'
