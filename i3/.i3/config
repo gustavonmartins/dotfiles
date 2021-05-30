@@ -420,3 +420,4 @@ mode "$mode_gaps_outer" {
 
 # MAnually added by Gustavo
 exec --no-startup-id gxkb
+exec --no-startup-id redshift
