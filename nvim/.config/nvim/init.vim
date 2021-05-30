@@ -31,6 +31,11 @@ Plug 'jeffkreeftmeijer/vim-numbertoggle'
 Plug 'lotabout/skim', { 'dir': '~/.skim', 'do': './install' }
 Plug 'lotabout/skim.vim'
 
+Plug 'nvim-lua/popup.nvim'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim'
+Plug 'nvim-telescope/telescope-fzy-native.nvim'
+
 "Uses FZF for CocList
 "Plug 'antoinemadec/coc-fzf' Disabled because of skim
 
@@ -65,18 +70,20 @@ Plug 'liquidz/vim-iced', {'for': 'clojure'}
 
 call plug#end()
 
-source ~/.config/nvim/001-coc.vim
+source ~/.config/nvim/003-coc.vim
 
 source ~/.config/nvim/002-vimtest.vim
 
 "Ranger-like file navigation
 source ~/.config/nvim/plug-config/rnvimr.vim
 
-source ~/.config/nvim/003-general.vim
+source ~/.config/nvim/001-general.vim
 
 source ~/.config/nvim/004-gruvbox.vim
 
 source ~/.config/nvim/005-fzf.vim
+
+source ~/.config/nvim/006-telescope.vim
 
 "****************************************************************************
 "* Plugin: Vim-easymotion
@@ -86,22 +93,8 @@ let g:EasyMotion_smartcase = 1
 "*****************************************************************************
 "" Self made
 "*****************************************************************************
-set mouse=a
-set number relativenumber
-set foldlevelstart=1
-set foldmethod=syntax
-set ignorecase
-set smartcase
-set noswapfile
-set foldopen+=jump
-set clipboard+=unnamedplus
 let g:airline#extensions#tabline#enabled = 1
 
-nnoremap <Space> <Nop>
-let mapleader="\<space>"
-let maplocalleader=","
-
-set cursorline
 
 "For gruvbox
 let g:gruvbox_italic=1
@@ -110,8 +103,6 @@ set termguicolors
 "gruvbox end
 
 
-"Will almost auto read file if you type  :e
-set autoread 
 
 "*********** VIM TEST PLUG IN
 " make test commands execute using dispatch.vim

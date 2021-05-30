@@ -214,5 +214,9 @@ source "/usr/share/skim/key-bindings.zsh"
 export PATH="/home/gus_new/.pyenv/bin:$PATH"
 eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
+
+export ESPIDF=/opt/esp-idf
+export PATH=~/.npm-global/bin:$PATH
+
 ### End of manually added part
 
