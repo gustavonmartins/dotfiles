@@ -63,9 +63,12 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 
     -- launch a terminal
     [ ((modm .|. shiftMask, xK_Return), spawn $ XMonad.terminal conf)
+    
+    -- take a screenshot
+    , ((0, xK_Print), spawn "flameshot gui")
 
     -- launch dmenu
-    , ((modm,               xK_p     ), spawn "dmenu_run")
+    , ((modm,               xK_p     ), spawn "rofi -combi-modi window,drun -show combi")
 
     -- launch gmrun
     , ((modm .|. shiftMask, xK_p     ), spawn "gmrun")
@@ -254,6 +257,7 @@ myStartupHook = return ()
 --
 main = do
     xmproc <- spawnPipe "xmobar -x 0 ~/.config/xmobar/xmobarrc"
+    xmproc <- spawnPipe "redshift-gtk"
     xmonad $ docks defaults
 
 -- A structure containing your configuration settings, overriding
