@@ -11,7 +11,11 @@ import XMonad
 import Data.Monoid
 import System.Exit
 
+import Graphics.X11.ExtraTypes.XF86
+
+import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ManageDocks
+import XMonad.Layout.NoBorders
 import qualified XMonad.StackSet as W
 import XMonad.Util.Run
 import qualified Data.Map        as M
@@ -23,7 +27,7 @@ myTerminal      = "alacritty"
 
 -- Whether focus follows the mouse pointer.
 myFocusFollowsMouse :: Bool
-myFocusFollowsMouse = True
+myFocusFollowsMouse = False
 
 -- Whether clicking on a window to focus also passes the click to the window
 myClickJustFocuses :: Bool
@@ -54,7 +58,7 @@ myWorkspaces    = ["1","2","3","4","5","6","7","8","9"]
 -- Border colors for unfocused and focused windows, respectively.
 --
 myNormalBorderColor  = "#dddddd"
-myFocusedBorderColor = "#ff0000"
+myFocusedBorderColor = "#6699cc"
 
 ------------------------------------------------------------------------
 -- Key bindings. Add, modify or remove key bindings here.
@@ -66,6 +70,9 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     
     -- take a screenshot
     , ((0, xK_Print), spawn "flameshot gui")
+
+    , ((0,xF86XK_AudioRaiseVolume), spawn "amixer set Master 10%+")
+    , ((0,xF86XK_AudioLowerVolume), spawn "amixer set Master 10%-")
 
     -- launch dmenu
     , ((modm,               xK_p     ), spawn "rofi -combi-modi window,drun -show combi")
@@ -186,7 +193,7 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 -- The available layouts.  Note that each layout is separated by |||,
 -- which denotes layout choice.
 --
-myLayout = avoidStruts (tiled ||| Mirror tiled ||| Full)
+myLayout = smartBorders $ avoidStruts $ tiled ||| Mirror tiled ||| Full
   where
      -- default tiling algorithm partitions the screen into two panes
      tiled   = Tall nmaster delta ratio
