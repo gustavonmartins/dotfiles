@@ -1,4 +1,4 @@
-Config { font = "-misc-fixed-*-*-*-*-10-*-*-*-*-*-*-*"
+Config { font = "xft:JetBrains Mono:size=9:bold:antialias=true"
        , additionalFonts = []
        , borderColor = "black"
        , border = TopB
@@ -42,6 +42,6 @@ Config { font = "-misc-fixed-*-*-*-*-10-*-*-*-*-*-*-*"
                     ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = " %stdinreader% |  %battery% | %cpu% | %memory% * %swap% | %eth0% - %eth1% }\
+       , template = " %StdinReader% |  %battery% | %cpu% | %memory% * %swap% | %eth0% - %eth1% }\
                     \{ <fc=#ee9a00>%date%</fc>| %EGPF% | %uname%"
        }
