@@ -41,8 +41,9 @@ keyOverrides conf@(XConfig {XMonad.modMask = modMask}) =
   --take a screenshot of entire display
     [ ((0, xK_Print), spawn "flameshot gui")
     , ((0, xF86XK_AudioRaiseVolume), spawn "amixer set Master 10%+")
+    , ((0, xF86XK_AudioLowerVolume), spawn "amixer set Master 10%-")
     , ((modMask, xK_p), spawn "rofi -combi-modi window,drun -show combi")
-    , ((0, xF86XK_AudioLowerVolume), mkTerm)
+    , ((modMask, xK_Return), mkTerm)
       --take a screenshot of focused window
     , ((modMask, xK_b), sendMessage Docks.ToggleStruts)
     ] ++
@@ -66,7 +67,9 @@ spawnBar screenId = Run.spawnPipe $ "xmobar -x " ++ screenNum
 killAllBars = Run.safeSpawn "killall" ["-9", "xmobar"]
 
 myStartupHook = do
-    spawnOnce "redshift-gtk"
+    spawnOnce "redshift-gtk &"
+    spawnOnce "picom --config ~/.config/picom &"
+    spawnOnce "nitrogen --restore"
     dynStatusBarStartup spawnBar killAllBars
 
 statusBarEventHook = dynStatusBarEventHook spawnBar killAllBars

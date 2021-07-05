@@ -1,5 +1,5 @@
 Config
-    { font = "xft:JetBrains Mono:size=9:bold:antialias=true"
+    { font = "xft:JetBrains Mono:size=9:bold:antialias=true:hinting:true"
     , additionalFonts = []
     , borderColor = "black"
     , border = TopB
@@ -51,7 +51,7 @@ Config
                 , "green"
                 ]
                 10
-          , Run Volume "default" "Master" [] 10
+          , Run Volume "default" "Master" [] 1
           , Run Battery
                 [ "-t"
                 , "<acstatus>: <left>% - <timeleft>"
