@@ -1,21 +1,27 @@
+import Control.Monad
 import qualified Data.Map as M
 import Graphics.X11.ExtraTypes.XF86
     ( xF86XK_AudioLowerVolume
     , xF86XK_AudioRaiseVolume
+    , xF86XK_MonBrightnessDown
+    , xF86XK_MonBrightnessUp
     )
 import Numeric
+import System.Exit
 import XMonad
 import XMonad.Actions.SpawnOn
 import XMonad.Config.Desktop
 import XMonad.Core
 import XMonad.Hooks.DynamicBars
 import XMonad.Hooks.DynamicLog
+import XMonad.Hooks.InsertPosition
 import qualified XMonad.Hooks.ManageDocks as Docks
 import XMonad.Layout
 import XMonad.Layout.NoBorders (smartBorders)
 import XMonad.Layout.ThreeColumns
 import XMonad.StackSet
 import qualified XMonad.StackSet as SS
+import XMonad.Util.Dmenu
 import qualified XMonad.Util.Run as Run
 import XMonad.Util.SpawnOnce (spawnOnce)
 
@@ -42,8 +48,13 @@ keyOverrides conf@(XConfig {XMonad.modMask = modMask}) =
     [ ((0, xK_Print), spawn "flameshot gui")
     , ((0, xF86XK_AudioRaiseVolume), spawn "amixer set Master 10%+")
     , ((0, xF86XK_AudioLowerVolume), spawn "amixer set Master 10%-")
+    , ((0, xF86XK_MonBrightnessUp), spawn "lux -a 10%")
+    , ((0, xF86XK_MonBrightnessDown), spawn "lux -s 10%")
     , ((modMask, xK_p), spawn "rofi -combi-modi window,drun -show combi")
     , ((modMask, xK_Return), mkTerm)
+    , ( (mod4Mask .|. shiftMask, xK_q)
+      , confirm "Confirm logout?" $ io (exitWith ExitSuccess))
+    , ((mod4Mask .|. shiftMask, xK_Return), mkTerm)
       --take a screenshot of focused window
     , ((modMask, xK_b), sendMessage Docks.ToggleStruts)
     ] ++
@@ -52,6 +63,11 @@ keyOverrides conf@(XConfig {XMonad.modMask = modMask}) =
     | (i, k) <- zip myWorkspaces [xK_1 .. xK_9]
     , (f, m) <- [(SS.view, 0), (SS.shift, shiftMask)]
     ]
+  where
+    confirm :: String -> X () -> X ()
+    confirm msg f = do
+        result <- dmenu [msg, "y", "n"]
+        when (result == "y") f
 
 myKeys =
     \c -> M.union (keyOverrides c) (keys XMonad.Config.Desktop.desktopConfig c)
@@ -87,10 +103,13 @@ myConfig =
         , startupHook = myStartupHook
         , handleEventHook = statusBarEventHook
         , logHook = myLogHook
+        , manageHook = insertPosition Below Newer
         , layoutHook =
               (Docks.avoidStruts . smartBorders) $
               (Mirror (ThreeCol 1 (3 / 100) (1 / 2)) |||
-               ThreeCol 1 (3 / 100) (1 / 2) ||| Full)
+               ThreeCol 1 (3 / 100) (1 / 2) |||
+               Full |||
+               Tall 1 (3 / 100) (1 / 2) ||| Mirror (Tall 1 (3 / 100) (1 / 2)))
         }
 
 main = xmonad myConfig
