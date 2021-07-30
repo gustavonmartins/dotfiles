@@ -6,7 +6,7 @@ Config
     , bgColor = "black"
     , fgColor = "grey"
     , alpha = 255
-    , position = Bottom
+    , position = BottomW L 90
     , textOffset = -1
     , iconOffset = -1
     , lowerOnStart = True
@@ -29,32 +29,11 @@ Config
                 ["-L", "3", "-H", "50", "--normal", "green", "--high", "red"]
                 10
           , Run Memory ["-t", "Mem: <usedratio>%"] 10
-          , Run Date "%b %_d %a %H:%M" "date" 10
+          , Run Date "%b %_d %H:%M" "date" 10
           , Run StdinReader
-          , Run Wireless
-                "wlo1"
-                [ "-a"
-                , "l"
-                , "-w"
-                , "4"
-                , "-t"
-                , "<fc=#8888FF><fn=1>\xf968</fn></fc> <essid> <quality>"
-                , "-L"
-                , "50"
-                , "-H"
-                , "75"
-                , "-l"
-                , "red"
-                , "-n"
-                , "yellow"
-                , "-h"
-                , "green"
-                ]
-                10
-          , Run Volume "default" "Master" [] 1
           , Run Battery
                 [ "-t"
-                , "<acstatus>: <left>% - <timeleft>"
+                , "<acstatus>: <left>%"
                 , "--"
                 , "-O"
                 , "AC"
@@ -70,5 +49,5 @@ Config
     , sepChar = "%"
     , alignSep = "}{"
     , template =
-          " %StdinReader% }{  %battery% | %cpu% | %wlo1wi% | %memory% | %eth0% - %eth1% | %default:Master%| <fc=#ee9a00>%date%</fc>  "
+          " %StdinReader% }{  %battery% | %cpu% | %memory% | %eth0% - %eth1% | <fc=#ee9a00>%date%</fc>  "
     }

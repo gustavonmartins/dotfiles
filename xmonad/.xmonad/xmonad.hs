@@ -14,6 +14,7 @@ import XMonad.Config.Desktop
 import XMonad.Core
 import XMonad.Hooks.DynamicBars
 import XMonad.Hooks.DynamicLog
+import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.InsertPosition
 import qualified XMonad.Hooks.ManageDocks as Docks
 import XMonad.Layout
@@ -50,7 +51,9 @@ keyOverrides conf@(XConfig {XMonad.modMask = modMask}) =
     , ((0, xF86XK_AudioLowerVolume), spawn "amixer set Master 10%-")
     , ((0, xF86XK_MonBrightnessUp), spawn "lux -a 10%")
     , ((0, xF86XK_MonBrightnessDown), spawn "lux -s 10%")
-    , ((modMask, xK_p), spawn "rofi -combi-modi window,drun -show combi -theme solarized_alternate")
+    , ( (modMask, xK_p)
+      , spawn
+            "rofi -combi-modi window,drun -show combi -matching fuzzy -sort -sorting-method fzf -theme solarized_alternate")
     , ((modMask, xK_Return), mkTerm)
     , ( (mod4Mask .|. shiftMask, xK_q)
       , confirm "Confirm logout?" $ io (exitWith ExitSuccess))
@@ -86,17 +89,25 @@ myStartupHook = do
     spawnOnce "redshift-gtk &"
     spawnOnce "picom --config ~/.config/picom &"
     spawnOnce "nitrogen --restore &"
+    spawnOnce
+        "trayer --edge bottom --align right --SetDockType true --SetPartialStrut true --expand true --widthtype percent --width 10 &"
+    spawnOnce "nm-applet &"
+    spawnOnce "volumeicon &"
     dynStatusBarStartup spawnBar killAllBars
 
 statusBarEventHook = dynStatusBarEventHook spawnBar killAllBars
 
 {- END Status Bar Config -}
+myLogHook :: X ()
 myLogHook = multiPP myStatusBarPP myStatusBarPP
 
 myConfig =
     Docks.docks $
     XMonad.Config.Desktop.desktopConfig
         { terminal = "alacritty"
+        , focusedBorderColor = "#800080"
+        , borderWidth = 2
+        , normalBorderColor = "#000000"
         , modMask = mod4Mask
         , keys = myKeys
         , focusFollowsMouse = False
@@ -107,9 +118,9 @@ myConfig =
         , layoutHook =
               (Docks.avoidStruts . smartBorders) $
               (Mirror (ThreeCol 1 (3 / 100) (1 / 2)) |||
-               ThreeCol 1 (3 / 100) (1 / 2) |||
+           --  ThreeCol 1 (3 / 100) (1 / 2) |||
                Full |||
                Tall 1 (3 / 100) (1 / 2) ||| Mirror (Tall 1 (3 / 100) (1 / 2)))
         }
 
-main = xmonad myConfig
+main = (xmonad . ewmh) myConfig
