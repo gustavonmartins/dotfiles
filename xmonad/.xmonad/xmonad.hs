@@ -50,7 +50,7 @@ keyOverrides conf@(XConfig {XMonad.modMask = modMask}) =
     , ((0, xF86XK_AudioLowerVolume), spawn "amixer set Master 10%-")
     , ((0, xF86XK_MonBrightnessUp), spawn "lux -a 10%")
     , ((0, xF86XK_MonBrightnessDown), spawn "lux -s 10%")
-    , ((modMask, xK_p), spawn "rofi -combi-modi window,drun -show combi")
+    , ((modMask, xK_p), spawn "rofi -combi-modi window,drun -show combi -theme solarized_alternate")
     , ((modMask, xK_Return), mkTerm)
     , ( (mod4Mask .|. shiftMask, xK_q)
       , confirm "Confirm logout?" $ io (exitWith ExitSuccess))
@@ -85,7 +85,7 @@ killAllBars = Run.safeSpawn "killall" ["-9", "xmobar"]
 myStartupHook = do
     spawnOnce "redshift-gtk &"
     spawnOnce "picom --config ~/.config/picom &"
-    spawnOnce "nitrogen --restore"
+    spawnOnce "nitrogen --restore &"
     dynStatusBarStartup spawnBar killAllBars
 
 statusBarEventHook = dynStatusBarEventHook spawnBar killAllBars
