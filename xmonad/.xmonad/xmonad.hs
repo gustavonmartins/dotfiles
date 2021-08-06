@@ -18,7 +18,7 @@ import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.InsertPosition
 import qualified XMonad.Hooks.ManageDocks as Docks
 import XMonad.Layout
-import XMonad.Layout.NoBorders (smartBorders)
+import XMonad.Layout.NoBorders (noBorders, smartBorders)
 import XMonad.Layout.ThreeColumns
 import XMonad.StackSet
 import qualified XMonad.StackSet as SS
@@ -90,7 +90,7 @@ myStartupHook = do
     spawnOnce "picom --config ~/.config/picom &"
     spawnOnce "nitrogen --restore &"
     spawnOnce
-        "trayer --edge bottom --align right --SetDockType true --SetPartialStrut true --expand true --widthtype percent --width 10 &"
+        "trayer --edge bottom --align right --SetDockType true --SetPartialStrut true --expand true --widthtype percent --width 10 --transparent true --alpha 0 --tint 0x800080 &"
     spawnOnce "nm-applet &"
     spawnOnce "volumeicon &"
     dynStatusBarStartup spawnBar killAllBars
@@ -116,11 +116,12 @@ myConfig =
         , logHook = myLogHook
         , manageHook = insertPosition Below Newer
         , layoutHook =
-              (Docks.avoidStruts . smartBorders) $
-              (Mirror (ThreeCol 1 (3 / 100) (1 / 2)) |||
+              (smartBorders) $
+              (Docks.avoidStruts (Mirror (ThreeCol 1 (3 / 100) (1 / 2))) |||
            --  ThreeCol 1 (3 / 100) (1 / 2) |||
                Full |||
-               Tall 1 (3 / 100) (1 / 2) ||| Mirror (Tall 1 (3 / 100) (1 / 2)))
+               (Docks.avoidStruts (Tall 1 (3 / 100) (1 / 2))) |||
+               (Docks.avoidStruts (Mirror (Tall 1 (3 / 100) (1 / 2)))))
         }
 
 main = (xmonad . ewmh) myConfig
