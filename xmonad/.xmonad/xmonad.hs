@@ -93,6 +93,7 @@ myStartupHook = do
         "trayer --edge bottom --align right --SetDockType true --SetPartialStrut true --expand true --widthtype percent --width 10 --transparent true --alpha 0 --tint 0x800080 &"
     spawnOnce "nm-applet &"
     spawnOnce "volumeicon &"
+    spawnOnce "fcitx -d &"
     dynStatusBarStartup spawnBar killAllBars
 
 statusBarEventHook = dynStatusBarEventHook spawnBar killAllBars
@@ -117,11 +118,10 @@ myConfig =
         , manageHook = insertPosition Below Newer
         , layoutHook =
               (smartBorders) $
-              (Docks.avoidStruts (Mirror (ThreeCol 1 (3 / 100) (1 / 2))) |||
            --  ThreeCol 1 (3 / 100) (1 / 2) |||
-               Full |||
-               (Docks.avoidStruts (Tall 1 (3 / 100) (1 / 2))) |||
-               (Docks.avoidStruts (Mirror (Tall 1 (3 / 100) (1 / 2)))))
+              (Docks.avoidStruts (Tall 1 (3 / 100) (1 / 2))) |||
+              (Docks.avoidStruts (Mirror (ThreeCol 1 (3 / 100) (1 / 2))) |||
+               Full ||| (Docks.avoidStruts (Mirror (Tall 1 (3 / 100) (1 / 2)))))
         }
 
 main = (xmonad . ewmh) myConfig
