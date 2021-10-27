@@ -200,7 +200,7 @@ esac
 #####Manually added by Gustavo
 #Goal: asdf
 #Source: https://asdf-vm.com/#/core-manage-asdf-vm
-. $HOME/.asdf/asdf.sh
+# . $HOME/.asdf/asdf.sh
 # append completions to fpath
 fpath=(${ASDF_DIR}/completions $fpath)
 # initialise completions with ZSH's compinit
@@ -220,5 +220,6 @@ eval "$(pyenv virtualenv-init -)"
 export ESPIDF=/opt/esp-idf
 export PATH=~/.npm-global/bin:$PATH
 
+. /opt/asdf-vm/asdf.sh
 ### End of manually added part
 
