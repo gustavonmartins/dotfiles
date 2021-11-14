@@ -223,3 +223,5 @@ export PATH=~/.npm-global/bin:$PATH
 . /opt/asdf-vm/asdf.sh
 ### End of manually added part
 
+
+export PATH="$HOME/.poetry/bin:$PATH"
