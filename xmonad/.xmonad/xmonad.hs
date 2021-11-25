@@ -106,8 +106,8 @@ myConfig =
     Docks.docks $
     XMonad.Config.Desktop.desktopConfig
         { terminal = "alacritty"
-        , focusedBorderColor = "#800080"
-        , borderWidth = 2
+        , focusedBorderColor = "#429942"
+        , borderWidth =  3
         , normalBorderColor = "#000000"
         , modMask = mod4Mask
         , keys = myKeys
