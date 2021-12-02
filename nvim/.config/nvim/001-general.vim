@@ -14,7 +14,7 @@ set clipboard+=unnamedplus
 set tabstop=4 shiftwidth=4 expandtab
 
 nnoremap <Space> <Nop>
-let mapleader="\<space>"
+let mapleader="\<SPACE>"
 let maplocalleader=","
 
 set cursorline

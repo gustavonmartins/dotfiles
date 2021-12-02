@@ -42,6 +42,9 @@ Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
 Plug 'nvim-telescope/telescope-fzy-native.nvim'
 
+"Harpoon
+Plug 'ThePrimeagen/harpoon'
+
 "Uses FZF for CocList
 "Plug 'antoinemadec/coc-fzf' Disabled because of skim
 
@@ -61,8 +64,6 @@ Plug 'morhetz/gruvbox'
 "Automatically create matching brackets and etc
 Plug 'jiangmiao/auto-pairs'
 
-"Ranger file explorer
-Plug 'kevinhwang91/rnvimr', {'do': 'make sync'}
 
 "Clojure stuff:
 
@@ -79,9 +80,6 @@ call plug#end()
 source ~/.config/nvim/003-coc.vim
 
 source ~/.config/nvim/002-vimtest.vim
-
-"Ranger-like file navigation
-source ~/.config/nvim/plug-config/rnvimr.vim
 
 source ~/.config/nvim/001-general.vim
 
