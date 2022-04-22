@@ -87,7 +87,6 @@ killAllBars = Run.safeSpawn "killall" ["-9", "xmobar"]
 
 myStartupHook = do
     spawnOnce "redshift-gtk &"
-    spawnOnce "picom --config ~/.config/picom &"
     spawnOnce "nitrogen --restore &"
     spawnOnce
         "trayer --edge bottom --align right --SetDockType true --SetPartialStrut true --expand true --widthtype percent --width 10 --transparent true --alpha 0 --tint 0x800080 &"
