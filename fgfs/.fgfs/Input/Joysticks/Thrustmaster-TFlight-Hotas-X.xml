@@ -1,0 +1,238 @@
+<?xml version="1.0"?>
+
+<PropertyList>
+  <name type="string">Thrustmaster T.Flight Hotas X</name>
+  <nasal>
+    <script type="string">
+         
+         setprop("/input/joysticks/js[0]/t-flight-hotas-x-modifier1", 0);
+         setprop("/input/joysticks/js[0]/t-flight-hotas-x-modifier2", 0);
+         
+      </script>
+    <module type="string">__js1</module>
+  </nasal>
+  <axis>
+    <desc type="string">Aileron</desc>
+    <dead-band type="double">0</dead-band>
+    <binding>
+      <command type="string">property-scale</command>
+      <property type="string">/controls/flight/aileron</property>
+      <factor type="double">1</factor>
+      <offset type="double">0</offset>
+      <power type="double">1</power>
+    </binding>
+  </axis>
+  <axis n="1">
+    <desc type="string">Elevator</desc>
+    <dead-band type="double">0</dead-band>
+    <binding>
+      <command type="string">property-scale</command>
+      <property type="string">/controls/flight/elevator</property>
+      <factor type="double">-1</factor>
+      <offset type="double">0</offset>
+      <power type="double">1</power>
+    </binding>
+  </axis>
+  <axis n="2">
+    <desc type="string">Throttle All Engines</desc>
+    <dead-band type="double">0</dead-band>
+    <binding>
+      <command type="string">property-scale</command>
+      <property type="string">/controls/engines/throttle-all</property>
+      <factor type="double">1</factor>
+      <offset type="double">0</offset>
+      <power type="double">1</power>
+    </binding>
+  </axis>
+  <axis n="3">
+    <desc type="string">Rudder</desc>
+    <dead-band type="double">0</dead-band>
+    <binding>
+      <command type="string">property-scale</command>
+      <property type="string">/controls/flight/rudder</property>
+      <factor type="double">1</factor>
+      <offset type="double">0</offset>
+      <power type="double">1</power>
+    </binding>
+  </axis>
+  <axis n="5">
+    <desc type="string">View (horizontal)</desc>
+    <low>
+      <binding>
+        <command type="string">nasal</command>
+        <script type="string">setprop("/sim/current-view/goal-heading-offset-deg", getprop("/sim/current-view/goal-heading-offset-deg") + 2);</script>
+      </binding>
+      <repeatable type="bool">true</repeatable>
+    </low>
+    <high>
+      <binding>
+        <command type="string">nasal</command>
+        <script type="string">setprop("/sim/current-view/goal-heading-offset-deg", getprop("/sim/current-view/goal-heading-offset-deg") - 2);</script>
+      </binding>
+      <repeatable type="bool">true</repeatable>
+    </high>
+  </axis>
+  <axis n="6">
+    <desc type="string">View (vertical)</desc>
+    <low>
+      <binding>
+        <command type="string">nasal</command>
+        <script type="string">setprop("/sim/current-view/goal-pitch-offset-deg", getprop("/sim/current-view/goal-pitch-offset-deg") + 1);</script>
+      </binding>
+      <repeatable type="bool">true</repeatable>
+    </low>
+    <high>
+      <binding>
+        <command type="string">nasal</command>
+        <script type="string">setprop("/sim/current-view/goal-pitch-offset-deg", getprop("/sim/current-view/goal-pitch-offset-deg") - 1);</script>
+      </binding>
+      <repeatable type="bool">true</repeatable>
+    </high>
+  </axis>
+  <button>
+    <desc type="string">Elevator Trim Down</desc>
+    <binding>
+      <command type="string">nasal</command>
+      <script type="string">controls.elevatorTrim(1);</script>
+    </binding>
+    <repeatable type="double">1</repeatable>
+  </button>
+  <button n="1">
+    <desc type="string">Elevator Trim Up</desc>
+    <binding>
+      <command type="string">nasal</command>
+      <script type="string">controls.elevatorTrim(-1);</script>
+    </binding>
+    <repeatable type="double">1</repeatable>
+  </button>
+  <button n="2">
+    <desc type="string">Custom</desc>
+    <repeatable type="bool">true</repeatable>
+    <binding>
+      <command type="string">nasal</command>
+      <script type="string">
+            controls.elevatorTrim(1);
+            gui.popupTip(sprintf("Elevator trim: %d", 100 * getprop("/controls/flight/elevator-trim")));
+         </script>
+      <module type="string">__js1</module>
+      <offset type="double">1</offset>
+    </binding>
+    <mod-up>
+      <binding n="0" type="string">
+      </binding>
+      <binding n="0">
+        <offset type="double">1</offset>
+      </binding>
+    </mod-up>
+  </button>
+  <button n="3">
+    <desc type="string">View Up</desc>
+    <binding>
+      <command type="string">property-adjust</command>
+      <property type="string">/sim/current-view/goal-pitch-offset-deg</property>
+      <step type="string">20.0</step>
+    </binding>
+  </button>
+  <button n="4">
+    <desc type="string">Mixture Lean</desc>
+    <binding>
+      <command type="string">nasal</command>
+      <script type="string">controls.adjMixture(-1);</script>
+    </binding>
+    <repeatable type="double">1</repeatable>
+  </button>
+  <button n="5">
+    <desc type="string">Flaps Up</desc>
+    <binding>
+      <command type="string">nasal</command>
+      <script type="string">controls.flapsDown(-1);</script>
+    </binding>
+    <repeatable type="double">0</repeatable>
+  </button>
+  <button n="6">
+    <desc type="string">Flaps Down</desc>
+    <binding>
+      <command type="string">nasal</command>
+      <script type="string">controls.flapsDown(1);</script>
+    </binding>
+    <repeatable type="double">0</repeatable>
+  </button>
+  <button n="7">
+    <desc type="string">Brakes</desc>
+    <repeatable type="string">false</repeatable>
+    <binding>
+      <command type="string">nasal</command>
+      <script type="string">controls.applyBrakes(1);</script>
+    </binding>
+    <mod-up>
+      <binding>
+        <command type="string">nasal</command>
+        <script type="string">controls.applyBrakes(0);</script>
+      </binding>
+    </mod-up>
+  </button>
+  <button n="8">
+    <desc type="string">Mixture Rich</desc>
+    <binding>
+      <command type="string">nasal</command>
+      <script type="string">controls.adjMixture(1);</script>
+    </binding>
+    <repeatable type="double">1</repeatable>
+  </button>
+  <button n="9">
+    <desc type="string">Custom</desc>
+    <repeatable type="bool">false</repeatable>
+    <binding>
+      <command type="string">nasal</command>
+      <script type="string">
+            setprop("/input/joysticks/js[0]/t-flight-hotas-x-modifier2", 1);
+         </script>
+      <module type="string">__js1</module>
+    </binding>
+    <mod-up>
+      <binding>
+        <command type="string">nasal</command>
+        <script type="string">
+               setprop("/input/joysticks/js[0]/t-flight-hotas-x-modifier2", 0);
+            </script>
+        <module type="string">__js1</module>
+      </binding>
+    </mod-up>
+  </button>
+  <button n="10">
+    <desc type="string">Custom</desc>
+    <repeatable type="bool">false</repeatable>
+    <binding>
+      <command type="string">nasal</command>
+      <script type="string">
+            gui.popupTip(sprintf("Button n=10 unused"));
+         </script>
+      <module type="string">__js1</module>
+    </binding>
+    <mod-up>
+      <binding n="0" type="string">
+      </binding>
+      <binding n="0">
+      </binding>
+    </mod-up>
+  </button>
+  <button n="11">
+    <desc type="string">Custom</desc>
+    <repeatable type="bool">false</repeatable>
+    <binding>
+      <command type="string">nasal</command>
+      <script type="string">
+            gui.popupTip(sprintf("Button n=11 unused"));
+         </script>
+      <module type="string">__js1</module>
+      <offset type="double">1</offset>
+    </binding>
+    <mod-up>
+      <binding n="0" type="string">
+      </binding>
+      <binding n="0">
+        <offset type="double">1</offset>
+      </binding>
+    </mod-up>
+  </button>
+</PropertyList>
