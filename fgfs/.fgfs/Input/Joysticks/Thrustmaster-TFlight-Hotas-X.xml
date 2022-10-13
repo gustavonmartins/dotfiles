@@ -8,7 +8,7 @@
          setprop("/input/joysticks/js[0]/t-flight-hotas-x-modifier1", 0);
          setprop("/input/joysticks/js[0]/t-flight-hotas-x-modifier2", 0);
          
-      </script>
+    </script>
     <module type="string">__js1</module>
   </nasal>
   <axis>
@@ -19,7 +19,7 @@
       <property type="string">/controls/flight/aileron</property>
       <factor type="double">1</factor>
       <offset type="double">0</offset>
-      <power type="double">1</power>
+      <power type="double">4</power>
     </binding>
   </axis>
   <axis n="1">
@@ -30,7 +30,7 @@
       <property type="string">/controls/flight/elevator</property>
       <factor type="double">-1</factor>
       <offset type="double">0</offset>
-      <power type="double">1</power>
+      <power type="double">4</power>
     </binding>
   </axis>
   <axis n="2">
@@ -52,7 +52,7 @@
       <property type="string">/controls/flight/rudder</property>
       <factor type="double">1</factor>
       <offset type="double">0</offset>
-      <power type="double">1</power>
+      <power type="double">4</power>
     </binding>
   </axis>
   <axis n="5">
@@ -113,7 +113,7 @@
       <script type="string">
             controls.elevatorTrim(1);
             gui.popupTip(sprintf("Elevator trim: %d", 100 * getprop("/controls/flight/elevator-trim")));
-         </script>
+      </script>
       <module type="string">__js1</module>
       <offset type="double">1</offset>
     </binding>
@@ -142,10 +142,10 @@
     <repeatable type="double">1</repeatable>
   </button>
   <button n="5">
-    <desc type="string">Flaps Up</desc>
+    <desc type="string">Flaps Down</desc>
     <binding>
       <command type="string">nasal</command>
-      <script type="string">controls.flapsDown(-1);</script>
+      <script type="string">controls.flapsDown(1);</script>
     </binding>
     <repeatable type="double">0</repeatable>
   </button>
@@ -180,24 +180,12 @@
     <repeatable type="double">1</repeatable>
   </button>
   <button n="9">
-    <desc type="string">Custom</desc>
-    <repeatable type="bool">false</repeatable>
+    <desc type="string">Flaps Up</desc>
     <binding>
       <command type="string">nasal</command>
-      <script type="string">
-            setprop("/input/joysticks/js[0]/t-flight-hotas-x-modifier2", 1);
-         </script>
-      <module type="string">__js1</module>
+      <script type="string">controls.flapsDown(-1);</script>
     </binding>
-    <mod-up>
-      <binding>
-        <command type="string">nasal</command>
-        <script type="string">
-               setprop("/input/joysticks/js[0]/t-flight-hotas-x-modifier2", 0);
-            </script>
-        <module type="string">__js1</module>
-      </binding>
-    </mod-up>
+    <repeatable type="double">0</repeatable>
   </button>
   <button n="10">
     <desc type="string">Custom</desc>
@@ -206,7 +194,7 @@
       <command type="string">nasal</command>
       <script type="string">
             gui.popupTip(sprintf("Button n=10 unused"));
-         </script>
+      </script>
       <module type="string">__js1</module>
     </binding>
     <mod-up>
@@ -223,7 +211,7 @@
       <command type="string">nasal</command>
       <script type="string">
             gui.popupTip(sprintf("Button n=11 unused"));
-         </script>
+      </script>
       <module type="string">__js1</module>
       <offset type="double">1</offset>
     </binding>

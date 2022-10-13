@@ -114,7 +114,7 @@ myConfig =
         , startupHook = myStartupHook
         , handleEventHook = statusBarEventHook
         , logHook = myLogHook
-        , manageHook = insertPosition Below Newer
+        , manageHook = insertPosition Above Newer
         , layoutHook =
               (smartBorders) $
            --  ThreeCol 1 (3 / 100) (1 / 2) |||
