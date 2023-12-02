@@ -16,34 +16,18 @@ print_mem() {
 	echo -n "Free mem: $MEM  "
 }
 
-_print_cpu() {
-	printf "CPU: %3d%% User %3d%% Nice %3d%% Sys %3d%% Spin %3d%% Int %3d%% Idle  " $1 $2 $3 $4 $5 $6
-}
 
-print_cpu() {
-	OUT=""
-	# iostat prints each column justified to 3 chars, so if one counter
-	# is 100, it jams up agains the preceeding one. sort this out.
-	while [ "${1}x" != "x" ]; do
-		if [ ${1} -gt 99 ]; then
-			OUT="$OUT ${1%100} 100"
-		else
-			OUT="$OUT ${1}"
-		fi
-		shift;
-	done
-	_print_cpu $OUT
-}
-
-print_cpuspeed() {
-	CPU_SPEED=`/sbin/sysctl hw.cpuspeed | cut -d "=" -f2`
-	printf "CPU speed: %4d MHz  " $CPU_SPEED
+print_wlan() {
+	WLAN=`ifconfig wlan0 | grep 'ssid' | awk -F ' ' '{ print $2 }'`
+	PUBLIC_IP=`curl ipecho.net/plain; echo`
+	echo -n "WLAN:" $WLAN " "
+	echo -n "IP:" $PUBLIC_IP " "
 }
 
 print_bat() {
-	BAT_STATUS=$1
-	BAT_LEVEL=$2
-	AC_STATUS=$3
+	BAT_STATUS=$2
+	BAT_LEVEL=$3
+	AC_STATUS=$1
 
 	if [ $AC_STATUS -ne 255 -o $BAT_STATUS -lt 4 ]; then
 		if [ $AC_STATUS -eq 0 ]; then
@@ -81,19 +65,14 @@ print_bat() {
 }
 
 # cache the output of apm(8), no need to call that every second.
-APM_DATA=""
-I=0
 while :; do
-	IOSTAT_DATA=`/usr/sbin/iostat -C | grep '[0-9]$'`
-	if [ $I -eq 0 ]; then
-		APM_DATA=`/usr/sbin/apm -alb`
-	fi
+	IOSTAT_DATA=`iostat -C | grep '[0-9]$'`
+	APM_DATA=`apm -alb`
 	# print_date
 	print_mem
-	print_cpu $IOSTAT_DATA
-	print_cpuspeed
+	print_wlan
 	print_bat $APM_DATA
 	echo ""
-	I=$(( ( ${I} + 1 ) % 11 ))
-	sleep 1
+	
+	sleep 10
 done
