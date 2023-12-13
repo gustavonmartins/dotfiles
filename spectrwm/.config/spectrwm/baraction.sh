@@ -1,27 +1,29 @@
 #!/bin/sh
 # Example Bar Action Script for OpenBSD-current.
 #
+set -Eeuo pipefail
 
 print_date() {
 	# The date is printed to the status bar by default.
 	# To print the date through this script, set clock_enabled to 0
 	# in spectrwm.conf.  Uncomment "print_date" below.
 	FORMAT="%a %b %d %R %Z %Y"
-	DATE=`date "+${FORMAT}"`
+	DATE=$(date "+${FORMAT}")
 	echo -n "${DATE}     "
 }
 
-print_mem() {
-	MEM=`/usr/bin/top | grep Free: | cut -d " " -f6`
-	echo -n "Free mem: $MEM  "
+print_proc() {
+	MEM=$(top | grep 'processes' | awk -F ' ' '{ print $1 }')
+	echo -n " Runing proc: $MEM" 
 }
 
 
 print_wlan() {
-	WLAN=`ifconfig wlan0 | grep 'ssid' | awk -F ' ' '{ print $2 }'`
-	PUBLIC_IP=`curl ipecho.net/plain; echo`
-	echo -n "WLAN:" $WLAN " "
-	echo -n "IP:" $PUBLIC_IP " "
+	PUBLIC_IP=$1
+	WLAN=$(ifconfig wlan0 | grep 'ssid' | awk -F ' ' '{ print $2 }')
+
+	echo -n " WLAN: $WLAN"
+	echo -n " IP: $PUBLIC_IP"
 }
 
 print_bat() {
@@ -58,21 +60,23 @@ print_bat() {
 
 			FULL="${AC_STRING}${BAT_STRING}"
 			if [ "$FULL" != "" ]; then
-				echo -n "$FULL"
+				echo -n " $FULL"
 			fi
 		fi
 	fi
 }
 
 # cache the output of apm(8), no need to call that every second.
+SLEEP_SEC=5
 while :; do
-	IOSTAT_DATA=`iostat -C | grep '[0-9]$'`
-	APM_DATA=`apm -alb`
+	APM_DATA=$(apm -alb)
+	PUBLIC_IP=$(curl ipecho.net/plain --no-progress-meter)
 	# print_date
-	print_mem
-	print_wlan
-	print_bat $APM_DATA
+	print_proc
+	print_wlan $PUBLIC_IP
+	#print_bat $APM_DATA
+
 	echo ""
 	
-	sleep 10
+	sleep $SLEEP_SEC
 done
