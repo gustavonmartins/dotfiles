@@ -244,6 +244,14 @@
   };
 
 
+  # Fonts
+  fonts.packages = with pkgs; [
+    terminus_font
+    terminus_font_ttf
+    termsyn
+    tamsyn
+    (nerdfonts.override {fonts =["JetBrainsMono"];})
+  ];
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
