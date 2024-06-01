@@ -13,6 +13,7 @@
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+  boot.kernel.sysctl."net.ipv6.conf.eth0.disable_ipv6" = true;
 
   networking.hostName = "blackhawk"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -23,7 +24,6 @@
 
   # Enable networking
   networking.networkmanager.enable = true;
-  networking.enableIPv6 = false;
 
   # nix.settings.experimental-features = ["nix-command" "flakes"];
 
@@ -51,9 +51,9 @@
   # Enable the Cinnamon Desktop Environment.
   services.xserver = {
       displayManager.lightdm.enable = true;
-      displayManager.defaultSession = "xfce+awesome";
     };
-
+  
+  services.displayManager.defaultSession = "xfce+awesome";
 
   services.xserver.desktopManager = {
     cinnamon.enable = true;
@@ -66,6 +66,7 @@
 
   services.xserver.windowManager = {
     awesome.enable = true;
+    icewm.enable = true;
 
   };
 
@@ -90,8 +91,8 @@
 
   # Configure keymap in X11
   services.xserver = {
-    layout = "de";
-    xkbVariant = "";
+    xkb.layout = "de";
+    xkb.variant = "";
   };
 
   # Configure console keymap
@@ -205,7 +206,6 @@
 
   virtualisation.virtualbox.host.enable = true;
   virtualisation.virtualbox.guest.enable = true;
-  virtualisation.virtualbox.guest.x11 = true;
   users.extraGroups.vboxusers.members = ["gustavo"];
 
  virtualisation.libvirtd = {
