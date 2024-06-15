@@ -10,7 +10,7 @@
 ;; Indicate which modules to import to access the variables
 ;; used in this configuration.
 (use-modules (gnu))
-(use-service-modules cups desktop networking ssh xorg)
+(use-service-modules cups desktop networking ssh xorg syncthing)
 
 (operating-system
   (locale "en_GB.utf8")
@@ -33,7 +33,11 @@
   (packages (append (map specification->package '("openbox" "awesome" 
 						  "git" 
 						  "neovim" 
-						  "xterm"
+						  "skim" "fzf"
+						  "stow"
+						  "keepassxc"
+						  "xterm" "rxvt-unicode"
+						  "calibre" "evince" "qpdfview" "mupdf" "zathura" "xpdf" "gv"
 						  "librewolf" "lynx" 
 						  "gajim" "hexchat"))
                     %base-packages))
@@ -44,7 +48,12 @@
    (append (list (service xfce-desktop-service-type)
                  (service enlightenment-desktop-service-type)
                  (set-xorg-configuration
-                  (xorg-configuration (keyboard-layout keyboard-layout))))
+                  (xorg-configuration (keyboard-layout keyboard-layout)))
+		 (service syncthing-service-type
+		  (syncthing-configuration
+		   (user "gustavo")
+		  ))
+		 )
 
            ;; This is the default list of services we
            ;; are appending to.
