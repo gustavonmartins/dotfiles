@@ -10,12 +10,12 @@
 ;; Indicate which modules to import to access the variables
 ;; used in this configuration.
 (use-modules (gnu))
-(use-service-modules cups desktop networking ssh xorg syncthing)
+(use-service-modules cups desktop networking ssh xorg syncthing pm mail)
 
 (operating-system
   (locale "en_GB.utf8")
   (timezone "Europe/Berlin")
-  (keyboard-layout (keyboard-layout "de"))
+  (keyboard-layout (keyboard-layout "de,us"))
   (host-name "guguix")
 
   ;; The list of user accounts ('root' is implicit).
@@ -30,29 +30,38 @@
   ;; Packages installed system-wide.  Users can also install packages
   ;; under their own account: use 'guix search KEYWORD' to search
   ;; for packages and 'guix install PACKAGE' to install a package.
-  (packages (append (map specification->package '("openbox" "awesome" 
+  (packages (append (map specification->package '("openbox" "awesome" "fluxbox" "fvwm" "icewm"
+						  "tar" "atool"
+						  "picom" "rofi" "tint2"
+						  "ncurses" "xsettingsd"
+						  "openssh" "sshfs" "gvfs"
+						  "uget"
 						  "git" 
-						  "neovim" 
-						  "skim" "fzf"
+						  "abiword" "gnumeric"
+						  "neovim" "guile-studio" "gedit" "geany" "pandoc" "apostrophe" 
+						  "skim" "fzf" "ripgrep"
 						  "stow"
 						  "keepassxc"
-						  "xterm" "rxvt-unicode"
+						  "xterm" "rxvt-unicode" "setxkbmap"
+						  "htop"
 						  "calibre" "evince" "qpdfview" "mupdf" "zathura" "xpdf" "gv"
 						  "librewolf" "lynx" 
-						  "gajim" "hexchat"))
+						  "claws-mail" "mutt"
+						  "mpv" "smplayer" "yt-dlp"
+						  "gajim" "gajim-omemo" "hexchat"))
                     %base-packages))
 
   ;; Below is the list of system services.  To search for available
   ;; services, run 'guix system search KEYWORD' in a terminal.
   (services
    (append (list (service xfce-desktop-service-type)
-                 (service enlightenment-desktop-service-type)
                  (set-xorg-configuration
                   (xorg-configuration (keyboard-layout keyboard-layout)))
 		 (service syncthing-service-type
 		  (syncthing-configuration
-		   (user "gustavo")
-		  ))
+		   (user "gustavo")))
+		 (service tlp-service-type)
+		 (service radicale-service-type)
 		 )
 
            ;; This is the default list of services we

@@ -8,7 +8,10 @@
              (gnu packages)
              (gnu services)
              (guix gexp)
-             (gnu home services shells))
+             (gnu home services shells)
+	     (gnu home services desktop)
+	     (gnu home services ssh)
+	     )
 
 (home-environment
   ;; Below is the list of packages that will show up in your
@@ -27,4 +30,11 @@
                                   "bashrc")))
                    (bash-profile (list (local-file
                                         "/home/gustavo/dotfiles/guix/.bash_profile"
-                                        "bash_profile"))))))))
+                                        "bash_profile")))))
+	 (service home-redshift-service-type (home-redshift-configuration
+                                              (location-provider 'manual)
+                                              (latitude 53.08)
+                                              (longitude 8.8)
+                                              )
+                  )
+	 )))
