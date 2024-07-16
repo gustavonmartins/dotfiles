@@ -10,7 +10,7 @@
 ;; Indicate which modules to import to access the variables
 ;; used in this configuration.
 (use-modules (gnu))
-(use-service-modules cups desktop networking ssh xorg syncthing pm mail)
+(use-service-modules cups desktop networking ssh xorg syncthing pm mail linux)
 
 (operating-system
   (locale "en_GB.utf8")
@@ -30,21 +30,24 @@
   ;; Packages installed system-wide.  Users can also install packages
   ;; under their own account: use 'guix search KEYWORD' to search
   ;; for packages and 'guix install PACKAGE' to install a package.
-  (packages (append (map specification->package '("openbox" "awesome" "fluxbox" "fvwm" "icewm"
-						  "tar" "atool"
+  (packages (append (map specification->package '(
+						  "gparted"
+						  "openbox" "awesome" "fluxbox" "fvwm" "icewm"
+						  "tar" "atool" "unzip" "pigz"
 						  "picom" "rofi" "tint2"
 						  "ncurses" "xsettingsd"
 						  "openssh" "sshfs" "gvfs"
 						  "uget"
 						  "git" 
-						  "abiword" "gnumeric"
 						  "neovim" "guile-studio" "gedit" "geany" "pandoc" "apostrophe" 
+						  "calibre" "evince" "qpdfview" "mupdf" "zathura" "xpdf" "gv"
+						  "abiword" "gnumeric"
+						  "gthumb" "shotwell"
 						  "skim" "fzf" "ripgrep"
 						  "stow"
 						  "keepassxc"
 						  "xterm" "rxvt-unicode" "setxkbmap"
 						  "htop"
-						  "calibre" "evince" "qpdfview" "mupdf" "zathura" "xpdf" "gv"
 						  "librewolf" "lynx" 
 						  "claws-mail" "mutt"
 						  "mpv" "smplayer" "yt-dlp"
@@ -62,6 +65,14 @@
 		   (user "gustavo")))
 		 (service tlp-service-type)
 		 (service radicale-service-type)
+		 (service zram-device-service-type 		; compressed ram.
+			(zram-device-configuration
+               (size "6G") 						; this is double the amount of ram plus 1-2 gb
+               (compression-algorithm 'zstd) 	; very fast, wont steal much of CPU
+               (priority 32767) 				; maximum priority. so everything goes here.
+             ))
+          (service earlyoom-service-type) 		; to not make the computer unresponsive when out of ram.
+		 
 		 )
 
            ;; This is the default list of services we
