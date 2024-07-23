@@ -37,18 +37,19 @@
 						  "picom" "rofi" "tint2"
 						  "ncurses" "xsettingsd"
 						  "openssh" "sshfs" "gvfs"
-						  "uget"
+						  "curl" "uget"
 						  "git" 
-						  "neovim" "guile-studio" "gedit" "geany" "pandoc" "apostrophe" 
+						  "libtree"
+						  "neovim" "guile-studio" "gedit" "geany" "pandoc" "apostrophe" "kate" 
 						  "calibre" "evince" "qpdfview" "mupdf" "zathura" "xpdf" "gv"
-						  "abiword" "gnumeric"
+						  "abiword" "gnumeric" "qalculate-gtk"
 						  "gthumb" "shotwell"
 						  "skim" "fzf" "ripgrep"
 						  "stow"
 						  "keepassxc"
-						  "xterm" "rxvt-unicode" "setxkbmap"
-						  "htop"
-						  "librewolf" "lynx" 
+						  "xterm" "rxvt-unicode" "xclip" "setxkbmap"
+						  "htop" "net-tools" "dstat" "lsof"
+						  "librewolf" "lynx" "ungoogled-chromium" "ublock-origin-chromium" 
 						  "claws-mail" "mutt"
 						  "mpv" "smplayer" "yt-dlp"
 						  "gajim" "gajim-omemo" "hexchat"))
@@ -91,15 +92,11 @@
   ;; by running 'blkid' in a terminal.
   (file-systems (cons* (file-system
                          (mount-point "/home")
-                         (device (uuid
-                                  "79b2d5d3-fd95-428c-8097-24c7ede8aca2"
-                                  'ext4))
+                         (device (file-system-label "GUIXHOME"))
                          (type "ext4"))
                        (file-system
                          (mount-point "/")
-                         (device (uuid
-                                  "11e84fd9-e063-4590-98fb-cf8dcaa32188"
-                                  'ext4))
+                         (device (file-system-label "GUIXROOT"))
                          (type "ext4"))
                        (file-system
                          (mount-point "/boot/efi")
