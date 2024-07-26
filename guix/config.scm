@@ -10,7 +10,7 @@
 ;; Indicate which modules to import to access the variables
 ;; used in this configuration.
 (use-modules (gnu) (nongnu system linux-initrd))
-(use-service-modules cups desktop networking ssh xorg syncthing pm mail linux nix)
+(use-service-modules desktop networking ssh xorg syncthing pm mail linux nix security)
 (use-package-modules package-management)
 
 (operating-system
@@ -51,7 +51,7 @@
 	            (syncthing-configuration
 		     (user "gustavo")))
 	   (service tlp-service-type)
-	   (service radicale-service-type)
+	   ;(service radicale-service-type)
 	   (service zram-device-service-type 		; compressed ram.
 		    (zram-device-configuration
                      (size "6G") 						; this is double the amount of ram plus 1-2 gb
@@ -60,6 +60,8 @@
                      ))
            (service earlyoom-service-type) 		; to not make the computer unresponsive when out of ram.
 	   (service nix-service-type)			; enables nix package manager
+           ;(fail2ban-service-type)
+           (service nftables-service-type)
 	   )
 
           ;; This is the default list of services we
