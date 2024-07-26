@@ -14,27 +14,27 @@
 	     )
 
 (home-environment
-  ;; Below is the list of packages that will show up in your
-  ;; Home profile, under ~/.guix-home/profile.
-  (packages (specifications->packages (list)))
+ ;; Below is the list of packages that will show up in your
+ ;; Home profile, under ~/.guix-home/profile.
+ (packages (specifications->packages (list)))
 
-  ;; Below is the list of Home services.  To search for available
-  ;; services, run 'guix home search KEYWORD' in a terminal.
-  (services
-   (list (service home-bash-service-type
-                  (home-bash-configuration
-                   (aliases '(("grep" . "grep --color=auto") ("ll" . "ls -l")
-                              ("ls" . "ls -p --color=auto")))
-                   (bashrc (list (local-file
-                                  "/home/gustavo/dotfiles/guix/.bashrc"
-                                  "bashrc")))
-                   (bash-profile (list (local-file
-                                        "/home/gustavo/dotfiles/guix/.bash_profile"
-                                        "bash_profile")))))
-	 (service home-redshift-service-type (home-redshift-configuration
-                                              (location-provider 'manual)
-                                              (latitude 53.08)
-                                              (longitude 8.8)
-                                              )
-                  )
-	 )))
+ ;; Below is the list of Home services.  To search for available
+ ;; services, run 'guix home search KEYWORD' in a terminal.
+ (services
+  (list (service home-bash-service-type
+                 (home-bash-configuration
+                  (aliases '(("grep" . "grep --color=auto") ("ll" . "ls -l")
+                             ("ls" . "ls -p --color=auto")))
+                  (bashrc (list (local-file
+                                 "/home/gustavo/dotfiles/guix/.bashrc"
+                                 "bashrc")))
+                  (bash-profile (list (local-file
+                                       "/home/gustavo/dotfiles/guix/.bash_profile"
+                                       "bash_profile")))))
+	(service home-redshift-service-type (home-redshift-configuration
+                                             (location-provider 'manual)
+                                             (latitude 53.08)
+                                             (longitude 8.8)
+                                             )
+                 )
+	)))
