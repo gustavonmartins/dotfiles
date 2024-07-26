@@ -9,10 +9,11 @@
 
 ;; Indicate which modules to import to access the variables
 ;; used in this configuration.
-(use-modules (gnu))
+(use-modules (gnu) (nongnu system linux-initrd))
 (use-service-modules cups desktop networking ssh xorg syncthing pm mail linux)
 
 (operating-system
+  (initrd microcode-initrd) ; nonfree, to prevent security exploits
   (locale "en_GB.utf8")
   (timezone "Europe/Berlin")
   (keyboard-layout (keyboard-layout "de,us"))
@@ -31,28 +32,8 @@
   ;; under their own account: use 'guix search KEYWORD' to search
   ;; for packages and 'guix install PACKAGE' to install a package.
   (packages (append (map specification->package '(
-						  "gparted"
-						  "openbox" "awesome" "fluxbox" "fvwm" "icewm"
-						  "tar" "atool" "unzip" "pigz"
-						  "picom" "rofi" "tint2"
-						  "ncurses" "xsettingsd"
-						  "openssh" "sshfs" "gvfs"
-						  "curl" "uget"
-						  "git" 
-						  "libtree"
-						  "neovim" "guile-studio" "gedit" "geany" "pandoc" "apostrophe" "kate" 
-						  "calibre" "evince" "qpdfview" "mupdf" "zathura" "xpdf" "gv"
-						  "abiword" "gnumeric" "qalculate-gtk"
-						  "gthumb" "shotwell"
-						  "skim" "fzf" "ripgrep"
-						  "stow"
-						  "keepassxc"
-						  "xterm" "rxvt-unicode" "xclip" "setxkbmap"
 						  "htop" "net-tools" "dstat" "lsof"
-						  "librewolf" "lynx" "ungoogled-chromium" "ublock-origin-chromium" 
-						  "claws-mail" "mutt"
-						  "mpv" "smplayer" "yt-dlp"
-						  "gajim" "gajim-omemo" "hexchat"))
+						  ))
                     %base-packages))
 
   ;; Below is the list of system services.  To search for available
@@ -73,7 +54,7 @@
                (priority 32767) 				; maximum priority. so everything goes here.
              ))
           (service earlyoom-service-type) 		; to not make the computer unresponsive when out of ram.
-		 
+	  
 		 )
 
            ;; This is the default list of services we
