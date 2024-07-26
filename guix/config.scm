@@ -50,8 +50,10 @@
 	   (service syncthing-service-type
 	            (syncthing-configuration
 		     (user "gustavo")))
-	   (service tlp-service-type)
-	   ;(service radicale-service-type)
+	   (service tlp-service-type
+                    (tlp-configuration
+                     (tlp-default-mode "BAT")))
+                                        ;(service radicale-service-type)
 	   (service zram-device-service-type 		; compressed ram.
 		    (zram-device-configuration
                      (size "6G") 						; this is double the amount of ram plus 1-2 gb

@@ -35,6 +35,8 @@
                                              (location-provider 'manual)
                                              (latitude 53.08)
                                              (longitude 8.8)
+                                             (nighttime-temperature 2500)
+                                             (nighttime-brightness 0.75)
                                              )
                  )
 	)))
