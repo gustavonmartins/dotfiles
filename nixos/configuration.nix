@@ -56,18 +56,17 @@
   services.displayManager.defaultSession = "xfce+awesome";
 
   services.xserver.desktopManager = {
-    cinnamon.enable = true;
     xfce = {
       enable = true;
       noDesktop = true;
       enableXfwm = false;
     };
+    cde.enable = true;
   };
 
   services.xserver.windowManager = {
     awesome.enable = true;
-    icewm.enable = true;
-
+    openbox.enable = true;
   };
 
   services.picom = {
@@ -91,7 +90,7 @@
 
   # Configure keymap in X11
   services.xserver = {
-    xkb.layout = "de";
+    xkb.layout = "de, us";
     xkb.variant = "";
   };
 
@@ -102,11 +101,12 @@
   services.printing.enable = true;
 
   # Enable sound with pipewire.
-  sound.enable = true;
-  hardware.pulseaudio.enable = false;
+  #sound.enable = true;
+  # hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
+    audio.enable = true;
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
@@ -123,6 +123,8 @@
       enable = true;
       user = "gustavo";
       dataDir = "/home/gustavo/Documents/Syncthing/";
+      overrideFolders = false;
+      overrideDevices = false;
     };
     jellyfin = {
       enable = true;
@@ -176,20 +178,22 @@
   #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
   #  wget
   neovim vscodium git notepadqq
-  skim fzf zsh alacritty
+  skim fzf ripgrep ripgrep-all zsh alacritty
+  google-drive-ocamlfuse
   thunderbird claws-mail gnome.geary
   stow
   librewolf lynx ungoogled-chromium
   gajim element-desktop hexchat signal-desktop telegram-desktop zulip jitsi
-  rofi polybar tint2 lemonbar
+  rofi polybar tint2 lemonbar motif
   keepassxc
   libreoffice calibre
-  evince mupdf okular zathura
+  evince mupdf okular zathura ocrmypdf
   treesheets freemind freeplane xmind vym vue # Compendium
   htop
   qbittorrent
   # media
-  mpv smplayer hypnotix vlc
+  pavucontrol
+  mpv smplayer hypnotix vlc yt-dlp
   ffmpeg
   handbrake
   mediainfo mediainfo-gui
@@ -250,6 +254,7 @@
     terminus_font_ttf
     termsyn
     tamsyn
+    iosevka
     (nerdfonts.override {fonts =["JetBrainsMono"];})
   ];
 
