@@ -1,0 +1,8 @@
+guix home reconfigure ~/dotfiles/guix/home-configuration.scm 
+
+sudo guix archive --authorize < signing-key.pub
+sudo guix system reconfigure ~/dotfiles/guix/config.scm --substitute-urls='https://ci.guix.gnu.org https://bordeaux.guix.gnu.org https://substitutes.nonguix.org'
+
+guix package -m ~/dotfiles/guix/manifest.scm --substitute-urls='https://ci.guix.gnu.org https://bordeaux.guix.gnu.org https://substitutes.nonguix.org'
+
+
