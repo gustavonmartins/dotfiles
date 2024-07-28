@@ -1,6 +1,6 @@
 ;; Manifest for three packages.
 (specifications->manifest '(
-			    "xterm" "rxvt-unicode" "xclip" "setxkbmap"
+			    "rxvt-unicode" "xclip"
 			    "htop" "net-tools" "dstat" "lsof"
 			    
 			    "gparted"
@@ -16,7 +16,7 @@
 			    
 			    
 			    "ncurses" "xsettingsd"
-			    "openssh" "sshfs" "gvfs"
+			    "sshfs"
 			    "curl" "uget"
 			    
 			    
@@ -24,6 +24,7 @@
 			    "git" 
 			    "neovim" "guile-studio" "gedit" "geany" "pandoc" "apostrophe" "kate"
 			    "vscodium" ;nonguix
+                            
 			    "calibre" "evince" "qpdfview" "mupdf" "zathura" "xpdf" "gv"
 			    "abiword" "gnumeric" "qalculate-gtk"
 			    

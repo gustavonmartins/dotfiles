@@ -35,7 +35,7 @@
  ;; for packages and 'guix install PACKAGE' to install a package.
  (packages
   (append (map specification->package '(
-					"htop" "net-tools" "dstat" "lsof"
+					"setxkbmap" "xterm" 
 					"nix"
 					))
           %base-packages))
@@ -47,6 +47,8 @@
            (service xfce-desktop-service-type)
            (set-xorg-configuration
             (xorg-configuration (keyboard-layout keyboard-layout)))
+           (service openssh-service-type
+                    (openssh-configuration (max-connections 0)))
 	   (service syncthing-service-type
 	            (syncthing-configuration
 		     (user "gustavo")))

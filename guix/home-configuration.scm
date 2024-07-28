@@ -10,7 +10,7 @@
              (guix gexp)
              (gnu home services shells)
 	     (gnu home services desktop)
-	     (gnu home services ssh)
+	     (gnu home services)
 	     )
 
 (home-environment
@@ -36,6 +36,7 @@
                                              (latitude 53.08)
                                              (longitude 8.8)
                                              (nighttime-temperature 2500)
+                                             (daytime-temperature 4500)
                                              (nighttime-brightness 0.75)
                                              )
                  )
