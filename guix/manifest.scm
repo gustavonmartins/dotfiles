@@ -28,7 +28,9 @@
 			    "calibre" "evince" "qpdfview" "mupdf" "zathura" "xpdf" "gv"
 			    "abiword" "gnumeric" "qalculate-gtk"
 			    
-			    "gthumb" "shotwell"
+			    
+			    "scantailor-advanced"
+			    "gthumb" "shotwell" "kolourpaint" "imagemagick"
 			    "skim" "fzf" "ripgrep"
 			    "stow"
 			    "keepassxc"
