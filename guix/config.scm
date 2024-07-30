@@ -10,7 +10,7 @@
 ;; Indicate which modules to import to access the variables
 ;; used in this configuration.
 (use-modules (gnu) (nongnu system linux-initrd))
-(use-service-modules desktop networking ssh xorg syncthing pm mail linux nix security)
+(use-service-modules desktop networking ssh xorg syncthing pm mail linux security)
 (use-package-modules package-management)
 
 (operating-system
@@ -36,7 +36,6 @@
  (packages
   (append (map specification->package '(
 					"setxkbmap" "xterm" 
-					"nix"
 					))
           %base-packages))
 
@@ -63,7 +62,6 @@
                      (priority 32767) 				; maximum priority. so everything goes here.
                      ))
            (service earlyoom-service-type) 		; to not make the computer unresponsive when out of ram.
-	   (service nix-service-type)			; enables nix package manager
            ;(fail2ban-service-type)
            (service nftables-service-type)
 	   )
@@ -78,8 +76,7 @@
    (keyboard-layout keyboard-layout)))
  (swap-devices
   (list (swap-space
-         (target (uuid
-                  "2a9227da-5328-45cc-bf9c-0f0e80814281")))))
+         (target "/dev/sda3"))))
 
  ;; The list of file systems that get "mounted".  The unique
  ;; file system identifiers there ("UUIDs") can be obtained
@@ -95,6 +92,5 @@
           (type "ext4"))
          (file-system
           (mount-point "/boot/efi")
-          (device (uuid "3DD8-190A"
-                        'fat16))
+          (device "/dev/sda1")
           (type "vfat")) %base-file-systems)))
