@@ -25,7 +25,7 @@
 			    "neovim" "guile-studio" "gedit" "geany" "pandoc" "apostrophe" "kate"
 			    "vscodium" ;nonguix
                             
-			    "calibre" "evince" "qpdfview" "mupdf" "zathura" "xpdf" "gv"
+			    "calibre" "evince" "qpdfview" "mupdf" "xpdf" "gv" ;; zathura has unusable interface
 			    "abiword" "gnumeric" "qalculate-gtk"
 			    
 			    
@@ -41,4 +41,6 @@
 			    "gajim" "gajim-omemo" "hexchat"
 			    
 			    "mpv" "smplayer" "yt-dlp"
+			    
+			    "qemu" "libvirt" "virt-manager"
 			    ))

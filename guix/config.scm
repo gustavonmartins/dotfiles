@@ -10,7 +10,7 @@
 ;; Indicate which modules to import to access the variables
 ;; used in this configuration.
 (use-modules (gnu) (nongnu system linux-initrd))
-(use-service-modules desktop networking ssh xorg syncthing pm mail linux security)
+(use-service-modules desktop networking ssh xorg syncthing pm mail linux security virtualization)
 (use-package-modules package-management)
 
 (operating-system
@@ -27,7 +27,8 @@
           (comment "Gustavo")
           (group "users")
           (home-directory "/home/gustavo")
-          (supplementary-groups '("wheel" "netdev" "audio" "video")))
+          (supplementary-groups '("wheel" "netdev" "audio" "video"
+									"libvirt")))
          %base-user-accounts))
 
  ;; Packages installed system-wide.  Users can also install packages
@@ -64,6 +65,7 @@
            (service earlyoom-service-type) 		; to not make the computer unresponsive when out of ram.
            ;(fail2ban-service-type)
            (service nftables-service-type)
+           (service libvirt-service-type)
 	   )
 
           ;; This is the default list of services we
