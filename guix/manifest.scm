@@ -3,12 +3,13 @@
 			    "rxvt-unicode" "xclip"
 			    "htop" "net-tools" "dstat" "lsof"
 			    
-			    "gparted"
+			    "gparted" "compsize"
 			    
 			    "tar" "atool" "unzip" "pigz"
 			    "libtree"
 			    
 			    "openbox" "awesome" "fluxbox" "fvwm" "icewm"
+			    "pavucontrol"
 			    "picom" "rofi" "tint2"
 			    
 			    
@@ -26,7 +27,7 @@
 			    "vscodium" ;nonguix
                             
 			    "calibre" "evince" "qpdfview" "mupdf" "xpdf" "gv" ;; zathura has unusable interface
-			    "abiword" "gnumeric" "qalculate-gtk"
+			    "abiword" "gnumeric" "libreoffice" "qalculate-gtk"
 			    
 			    
 			    "scantailor-advanced"

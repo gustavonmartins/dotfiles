@@ -91,7 +91,8 @@
          (file-system
           (mount-point "/")
           (device (file-system-label "GUIXROOT"))
-          (type "ext4"))
+          (type "btrfs")
+          (options "compress=lzo"))
          (file-system
           (mount-point "/boot/efi")
           (device "/dev/sda1")
