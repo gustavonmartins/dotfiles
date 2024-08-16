@@ -23,7 +23,7 @@
 			    
 			    
 			    "git" 
-			    "neovim" "guile-studio" "gedit" "geany" "pandoc" "apostrophe" "kate"
+			    "neovim" "vim" "guile-studio" "gedit" "geany" "pandoc" "apostrophe" "kate"
 			    "vscodium" ;nonguix
                             
 			    "calibre" "evince" "qpdfview" "mupdf" "xpdf" "gv" ;; zathura has unusable interface

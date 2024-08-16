@@ -90,7 +90,7 @@
           (mount-point "/")
           (device (file-system-label "GUIXROOT"))
           (type "btrfs")
-          (options "compress=lzo"))
+          (options "autodefrag,compress=lzo,discard=async"))
          (file-system
           (mount-point "/boot/efi")
           (device "/dev/sda1")
