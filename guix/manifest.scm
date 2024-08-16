@@ -17,7 +17,7 @@
 			    
 			    
 			    "ncurses" "xsettingsd"
-			    "sshfs"
+			    "sshfs" "gvfs"
 			    "curl" "uget"
 			    
 			    
