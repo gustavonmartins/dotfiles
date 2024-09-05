@@ -37,6 +37,7 @@
  (packages
   (append (map specification->package '(
 					"setxkbmap" "xterm" 
+					"sway" "wmenu"
 					))
           %base-packages))
 
@@ -44,9 +45,11 @@
  ;; services, run 'guix system search KEYWORD' in a terminal.
  (services
   (append (list
-           (service xfce-desktop-service-type)
-           (set-xorg-configuration
-            (xorg-configuration (keyboard-layout keyboard-layout)))
+           (service xfce-desktop-service-type)           
+           (service gdm-service-type
+		    (gdm-configuration
+		     (wayland? #t)
+		     (xorg-configuration (xorg-configuration(keyboard-layout keyboard-layout)))))
            (service openssh-service-type
                     (openssh-configuration (max-connections 0)))
 	   (service syncthing-service-type
@@ -63,14 +66,19 @@
                      (priority 32767) 				; maximum priority. so everything goes here.
                      ))
            (service earlyoom-service-type) 		; to not make the computer unresponsive when out of ram.
-           ;(fail2ban-service-type)
+					;(fail2ban-service-type)
            (service nftables-service-type)
            (service libvirt-service-type)
+           (service virtlog-service-type
+             (virtlog-configuration
+              (max-clients 100))) 
 	   )
 
           ;; This is the default list of services we
           ;; are appending to.
-          %desktop-services))
+          (modify-services %desktop-services
+                           (delete gdm-service-type))
+          ))
  (bootloader
   (bootloader-configuration
    (bootloader grub-efi-bootloader)
