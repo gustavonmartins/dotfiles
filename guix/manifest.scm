@@ -18,7 +18,7 @@
 			    
 			    "ncurses" "xsettingsd"
 			    "sshfs" "gvfs"
-			    "curl" "uget"
+			    "curl" "uget" "qbittorrent"
 			    
 			    
 			    
@@ -39,9 +39,9 @@
 			    
 			    "librewolf" "lynx" "ungoogled-chromium" "ublock-origin-chromium" 
 			    "claws-mail" "mutt"
-			    "gajim" "gajim-omemo" "hexchat"
+			    "gajim" "gajim-omemo" "hexchat" "bitlbee" "dino"
 			    
 			    "mpv" "smplayer" "yt-dlp"
 			    
-			    "qemu" "libvirt" "virt-manager"
+			    "qemu"  "virt-manager"
 			    ))

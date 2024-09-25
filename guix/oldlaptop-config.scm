@@ -38,6 +38,7 @@
   (append (map specification->package '(
 					"setxkbmap" "xterm" 
 					"sway" "wmenu"
+					"libvirt"
 					))
           %base-packages))
 
