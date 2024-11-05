@@ -49,7 +49,7 @@ beautiful.init(gears.filesystem.get_themes_dir() .. "default/theme.lua")
 beautiful.font = "Terminus 10"
 
 -- This is used later as the default terminal and editor to run.
-terminal = "urxvt -fg white -bg black"
+terminal = "xfce4-terminal"
 editor = os.getenv("EDITOR") or "nano"
 editor_cmd = terminal .. " -e " .. editor
 

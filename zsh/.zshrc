@@ -225,3 +225,4 @@ export PATH=~/.npm-global/bin:$PATH
 
 
 export PATH="$HOME/.poetry/bin:$PATH"
+eval "$(vfox activate zsh)"
