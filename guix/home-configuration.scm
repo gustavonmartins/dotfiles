@@ -25,12 +25,7 @@
                  (home-bash-configuration
                   (aliases '(("grep" . "grep --color=auto") ("ll" . "ls -l")
                              ("ls" . "ls -p --color=auto")))
-                  (bashrc (list (local-file
-                                 "/home/gustavo/dotfiles/guix/.bashrc"
-                                 "bashrc")))
-                  (bash-profile (list (local-file
-                                       "/home/gustavo/dotfiles/guix/.bash_profile"
-                                       "bash_profile")))))
+                  ))
 	(service home-redshift-service-type (home-redshift-configuration
                                              (location-provider 'manual)
                                              (latitude 53.08)
