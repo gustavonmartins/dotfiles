@@ -8,32 +8,55 @@
     [ (modulesPath + "/installer/scan/not-detected.nix")
     ];
 
-  boot.initrd.availableKernelModules = [ "xhci_pci" "ahci" "usbhid" "usb_storage" "sd_mod" ];
-  boot.initrd.kernelModules = [ ];
+  boot.initrd.availableKernelModules = [ "xhci_pci" "ahci" "usb_storage" "usbhid" "sd_mod" ];
+  boot.initrd.kernelModules = [ "dm-snapshot" ];
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
-  
-  fileSystems."/home" =
-    { device = "/dev/disk/by-label/NIXHOME";
-      fsType = "ext4";
-    };
-
-  fileSystems."/" =
-    { device = "/dev/disk/by-label/NIXOS";
-      fsType = "ext4";
-    };
-
 
   fileSystems."/boot" =
     { device = "/dev/disk/by-label/boot";
       fsType = "vfat";
-      options = [ "fmask=0022" "dmask=0022" ];
+      options = [ "fmask=0077" "dmask=0077" "relatime" "nodev" "noexec" "nosuid"];
     };
 
-  swapDevices = [ {
-    device = "/dev/sda2";
-    randomEncryption.enable = true; 
-  } ];
+
+  fileSystems."/" =
+    { device = "/dev/disk/by-label/NIXOS_ROOT";
+      fsType = "ext4";
+    };
+
+  fileSystems."/home" =
+    { device = "/dev/disk/by-label/NIXOS_HOME";
+      fsType = "ext4";
+      options = ["defaults" "rw" "nodev" "nosuid"];
+    };
+    
+  fileSystems."/mnt/jellyfin" =
+    { device = "/dev/disk/by-label/NIXOS_JELLYFIN";
+      fsType = "ext4";
+      options = ["defaults" "relatime" "rw" "nodev" "noexec" "nosuid"];
+    };
+    
+  fileSystems."/mnt/syncthing" =
+    { device = "/dev/disk/by-label/NIXOS_SYNCTHING";
+      fsType = "ext4";
+      options = ["defaults" "relatime" "rw"  "nodev" "noexec" "nosuid"];
+    };
+    
+  fileSystems."/tmp" =
+    { device = "/dev/disk/by-label/NIXOS_TMP";
+      fsType = "ext4";
+      options = ["defaults" "relatime" "rw" "nodev" "noexec" "nosuid"];
+    };
+    
+  fileSystems."/var" =
+    { device = "/dev/disk/by-label/NIXOS_VAR";
+      fsType = "ext4";
+      options = ["defaults" "relatime" "rw" "nodev" "noexec" "nosuid"];
+    };
+
+
+  swapDevices = [ ];
 
   # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
   # (the default) this is the recommended approach. When using systemd-networkd it's
