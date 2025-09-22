@@ -25,7 +25,7 @@
 	google-cloud-sdk rclone
 	
 	# Communication
-    gajim
+    dino gajim movim
     
     # Configurations
     stow
@@ -76,7 +76,9 @@
   #
   home.sessionVariables = {
     # EDITOR = "emacs";
+    TMPDIR = "/home/gustavo/my-tmp";
   };
+  
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;

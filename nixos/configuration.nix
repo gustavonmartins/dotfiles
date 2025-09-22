@@ -23,6 +23,9 @@
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
+  
+# Configure console keymap
+  console.keyMap = "de";
 
 # Enable networking
   networking.networkmanager.enable = true;
@@ -51,15 +54,22 @@
   services = {
     xserver={
       enable=true;
+      # Configure keymap in X11
+      xkb.layout = "de,us";
+      xkb.variant = "";
       desktopManager = {
         xfce = {
           enable = true;
           noDesktop = false;
-          enableXfwm = true ;
+          enableXfwm = false ;
         };
       };
       windowManager ={
         awesome.enable = true;
+        xmonad = {
+          enable = true;
+          enableContribAndExtras = true;
+        };
       };
 
     };
@@ -79,12 +89,6 @@
 	    night = 3000;
       };
     };
-    
-    # Configure keymap in X11
-  xserver = {
-    xkb.layout = "de, us";
-    xkb.variant = "";
-  };
   };
   
   
@@ -95,12 +99,6 @@
       longitude = 13.4;
   };
 
-
-  
-
-  # Configure console keymap
-  console.keyMap = "de";
-
   # Enable CUPS to print documents.
   services.printing.enable = false;
 
@@ -108,7 +106,7 @@
   services.pipewire = {
     enable = true;
     audio.enable = true;
-	  alsa.enable = true;
+	alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
   };
