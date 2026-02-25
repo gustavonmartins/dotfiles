@@ -19,13 +19,16 @@
     android-tools universal-android-debloater
     
     # Banking
-	electrum secp256k1 sparrow
+	secp256k1 sparrow # electrum
+	
+	# Bluetooth
+	bluez bluez-tools
 	
 	# Cloud
 	google-cloud-sdk rclone
 	
 	# Communication
-    dino gajim movim
+    gajim
     
     # Configurations
     stow
@@ -36,11 +39,17 @@
 	# Downloads
     qbittorrent uget
     
+    # Games
+    ezquake openttd redeclipse sauerbraten unvanquished xonotic #assaultcube barony urbanterror
+    
     # Pictures management
     digikam exiftool
     
     # Programming
     go neovim python3 vscodium
+    
+    # System
+    lsof
   ];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage

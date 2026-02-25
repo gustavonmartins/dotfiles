@@ -23,8 +23,8 @@
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
-  
-# Configure console keymap
+
+  # Configure console keymap
   console.keyMap = "de";
 
 # Enable networking
@@ -54,7 +54,6 @@
   services = {
     xserver={
       enable=true;
-      # Configure keymap in X11
       xkb.layout = "de,us";
       xkb.variant = "";
       desktopManager = {
@@ -67,13 +66,13 @@
       windowManager ={
         awesome.enable = true;
         xmonad = {
-          enable = true;
-          enableContribAndExtras = true;
+		  enable = true;
+		  enableContribAndExtras = true;
         };
       };
 
     };
-    displayManager.defaultSession = "xfce+awesome";
+    displayManager.defaultSession = "xfce+xmonad";
     # prevents video bugs like tearing or freezing after inacitivit using Intel GPU
     picom = {
       enable = true;
@@ -106,7 +105,7 @@
   services.pipewire = {
     enable = true;
     audio.enable = true;
-	alsa.enable = true;
+	  alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
   };
@@ -174,7 +173,56 @@
 
     jellyseerr.enable=false;
     
+    calibre-web = {
+      enable = true;
+      listen = {
+        ip = "0.0.0.0";
+        port = 8083;
+      };
+      options = {
+        calibreLibrary = "/mnt/jellyfin/calibre";  # your Calibre library path
+        enableBookUploading = true;
+      };
+      user  = "calibre";
+      group = "jellyfin_grp";
+    };
     
+    kavita = {
+      enable = true;
+
+	  dataDir = "/mnt/jellyfin/books";
+	  tokenKeyFile = "/var/lib/kavita/token.key";
+      user = "kavita";
+	#This will probably crash due to missing key. TO create a key, do:
+	#sudo bash -c 'tr -dc A-Za-z0-9 </dev/urandom | head -c 64 > /var/lib/kavita/token.key'
+	#sudo chown kavita:kavita /var/lib/kavita/token.key
+	#sudo chmod 600 /var/lib/kavita/token.key
+  };
+  
+  nginx = {
+	  enable = true;
+	  recommendedProxySettings = true;
+	  recommendedTlsSettings = true;
+	  virtualHosts."_default" = {
+	   default = true;  
+	  
+   locations."/jellyfin/" = {
+  proxyPass = "http://127.0.0.1:8096/";
+};
+
+    
+    locations."/kavita/" = {
+      proxyPass = "http://0.0.0.0:5000";
+      
+    };
+    
+    locations."/prowlarr/" = {
+      proxyPass = "http://0.0.0.0:9696";
+    };
+    
+    
+  };
+};
     
     
     
@@ -182,20 +230,28 @@
 
   # Enable touchpad support (enabled default in most desktopManager).
   # services.libinput.enable = true;
-  users.groups.jellyfin_grp.members = ["radarr" "sonarr" "jellyfin" "gustavo"];
+  users.groups.jellyfin_grp.members = ["kavita" "calibre" "radarr" "sonarr" "jellyfin" "gustavo"];
   users.groups.syncthing_grp.members = ["syncthing" "gustavo"];
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.gustavo = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "jellyfin" "syncthing" "libvirtd"]; # Enable ‘sudo’ for the user.
+    extraGroups = ["kavita" "wheel" "jellyfin" "jellyfin_grp" "syncthing" "libvirtd"]; # Enable ‘sudo’ for the user.
     packages = with pkgs; [
   #  thunderbird
     ];
   };
+  
+   systemd.tmpfiles.rules = [
+    "d /mnt/jellyfin 1770 username jellyfin_grp -"
+  ];
 
   # Allow unfree packages
-  nixpkgs.config.allowUnfree = false;
+  nixpkgs.config={
+	allowUnfree = false;
+	
+  };
+  
   
   home-manager = {
     extraSpecialArgs = {inherit inputs;};
@@ -238,7 +294,7 @@
     kdePackages.dolphin sshfs # for kde connect
     
     # Office
-    gnumeric libreoffice
+    evince gnumeric libreoffice
     
     # Passwords
     gnupg keepassxc
@@ -253,7 +309,7 @@
     skim fzf ripgrep ripgrep-all
     
     # Text editors
-    geany notepadqq
+    geany #notepadqq
 
     # Virtualization
     qemu libvirt-glib
@@ -312,10 +368,15 @@
           
           # Allow replies to connections initiated by myself
           ct state established,related accept;
+          # Allow HTTP
+          ip saddr @LAN tcp dport {80,443} accept;
 
           # Allow from jellyfin
           ip saddr @LAN tcp dport 8096 accept;
           ip saddr @LAN udp dport 7359 accept;
+          
+          # Allow from kavita
+          ip saddr @LAN tcp dport 5000 accept;
           
           # Allow from syncthing
           ip saddr @LAN tcp dport 22000 accept;
@@ -333,6 +394,10 @@
           # Allow bittorrent
           tcp dport {65000,6771} log prefix "bittorrent incoming tcp accepted: " accept;
           udp dport {65000,6771} log prefix "bittorrent incoming udp accepted: " accept;
+          
+          # Allow quake
+          udp dport {26000,27500,27501,27510,28502,28503,28504,27036,27015,28800,28801} log prefix "quake incoming udp accepted: " accept;
+          tcp dport {26000,27036,27015} log prefix "quake incoming udp accepted: " accept;
           
           
           # Default drop all other input
