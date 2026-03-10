@@ -1,8 +1,8 @@
 { config, lib, pkgs, ... }:
 
 {
-  home.username = "gustavo";
-  home.homeDirectory = "/home/gustavo";
+  home.username = "aicoding";
+  home.homeDirectory = "/home/aicoding";
 
   # This value determines the Home Manager release that your configuration is
   # compatible with. This helps avoid breakage when a new Home Manager release
@@ -12,37 +12,14 @@
   # want to update the value, then make sure to first check the Home Manager
   # release notes.
   home.stateVersion = "25.05"; # Please read the comment before changing.
- 
 
   home.packages = with pkgs; [
   
-	## Android tools
-    android-tools universal-android-debloater
-    
-    # Banking
-	secp256k1 sparrow # electrum
+	
 	
 	# Bluetooth
 	bluez bluez-tools
-	
-	# Cloud
-	google-cloud-sdk rclone
-	
-	# Communication
-    gajim
     
-    # Configurations
-    stow
-	
-	# Downloads
-    qbittorrent uget
-    
-    # Games
-    ezquake openttd redeclipse sauerbraten unvanquished xonotic #assaultcube barony urbanterror
-    
-    # Pictures management
-    digikam exiftool
-
     # System
     lsof
   ];
@@ -80,14 +57,6 @@
   #
   home.sessionVariables = {
     # EDITOR = "emacs";
-    TMPDIR = "/home/gustavo/my-tmp";
-  };
-  
-  programs.bash = {                                                                          
-    enable = true;                                                                           
-    sessionVariables = {                                                                     
-      CGO_ENABLED = "0";                                                                     
-    };                                                                                       
   };
   
 
