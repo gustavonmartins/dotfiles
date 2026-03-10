@@ -16,7 +16,7 @@
   boot.loader.efi.canTouchEfiVariables = true;
   boot.kernel.sysctl."net.ipv6.conf.eth0.disable_ipv6" = true;
   boot.kernelPackages = pkgs.linuxPackages_6_12;
-  networking.hostName = "blackview"; # Define your hostname.
+  networking.hostName = "elitebook"; # Define your hostname.
 
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
@@ -117,7 +117,26 @@
     ];
   };
   
-  programs.kdeconnect.enable = false;
+  programs={
+	kdeconnect.enable = false;
+	
+	firejail = {
+      enable = false;
+      wrappedBinaries = {
+        librewolf = {
+          executable = "${pkgs.librewolf}/bin/librewolf";
+          profile = "${pkgs.firejail}/etc/firejail/librewolf.profile";
+          extraArgs = [
+            # Enforce dark mode
+            "--env=GTK_THEME=Adwaita:dark"
+            # Enable system notifications
+            "--dbus-user.talk=org.freedesktop.Notifications"
+            "--private-home=Downloads"
+			# Optional: Prevent access to other partitions/media
+			"--allusers"
+			"--nogroups"
+        ];};};};
+  };
   
   # Enable automatic system upgrades daily
   system.autoUpgrade = {
@@ -158,7 +177,7 @@
       openFirewall = true;
     };
     sonarr = {
-      enable = false;
+      enable = true;
       user = "sonarr";
       group = "jellyfin_grp";
     };
@@ -220,6 +239,10 @@
       proxyPass = "http://0.0.0.0:9696";
     };
     
+    locations."/sonarr/" = {
+      proxyPass = "http://0.0.0.0:8989";
+    };
+    
     
   };
 };
@@ -234,12 +257,16 @@
   users.groups.syncthing_grp.members = ["syncthing" "gustavo"];
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.gustavo = {
-    isNormalUser = true;
-    extraGroups = ["kavita" "wheel" "jellyfin" "jellyfin_grp" "syncthing" "libvirtd"]; # Enable ‘sudo’ for the user.
-    packages = with pkgs; [
-  #  thunderbird
-    ];
+  users.users = {
+    gustavo = {
+      isNormalUser = true;
+      extraGroups = ["kavita" "wheel" "jellyfin" "jellyfin_grp" "syncthing" "libvirtd"]; # Enable ‘sudo’ for the user.
+      packages = with pkgs; [
+    #  thunderbird
+      ];
+      };
+    aicoding = {isNormalUser=true;
+    };
   };
   
    systemd.tmpfiles.rules = [
@@ -247,16 +274,17 @@
   ];
 
   # Allow unfree packages
-  nixpkgs.config={
-	allowUnfree = false;
-	
+  nixpkgs.config = {
+    allowUnfree = true;
+    
   };
-  
+
   
   home-manager = {
     extraSpecialArgs = {inherit inputs;};
     users = {
       "gustavo" = import ./home.nix;
+      "aicoding" = import ./aicoding-home.nix;
     };
   };
 
@@ -274,12 +302,15 @@
   environment.systemPackages = with pkgs; [
   #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
   #  wget
+  
+	# AI
+	claude-code
     
     # Compression
     p7zip unzip xarchiver xz zip
     
     # Desktop
-    awesome xfce.xfconf xfce.xfce4-fsguard-plugin xfce.gigolo xfce.xfce4-netload-plugin xfce.orage xfce.xfce4-weather-plugin xfce.xfce4-xkb-plugin
+    awesome rofi xfce.xfconf xfce.xfce4-fsguard-plugin xfce.gigolo xfce.xfce4-netload-plugin xfce.orage xfce.xfce4-weather-plugin xfce.xfce4-xkb-plugin
     
     # Internet browsers
     brave librewolf lynx tor-browser ungoogled-chromium
@@ -300,23 +331,55 @@
     gnupg keepassxc
 
     # Programming
-    git
+    bun deno git go golangci-lint gopls jq neovim nodejs plantuml python3 vscodium
+    # Programming: Design
+    nodePackages.mermaid-cli
     
     # System tools
-    eza htop lsd
+    eza htop lsd tree
     
     # Search tools
     skim fzf ripgrep ripgrep-all
     
     # Text editors
     geany #notepadqq
+    
+    # Terminals
+    tmux zellij
 
     # Virtualization
-    qemu libvirt-glib
+    dive docker-compose podman-tui qemu libvirt-glib
   ];
-  virtualisation.virtualbox.host.enable = true;
-  virtualisation.virtualbox.guest.enable = true;
+  
+  environment.sessionVariables = {
+      TMPDIR = "$HOME/.tmp";
+      TMP = "$HOME/.tmp";
+      TEMP = "$HOME/.tmp";
+    };     
+                                                                                                                                                                                             
+                                                                                                                                                                                              
+    # Create the directory on login (optional, using pam)                                                                                                                                     
+    security.pam.loginLimits = []; 
+  
   users.extraGroups.vboxusers.members = ["gustavo"];
+  
+  virtualisation={
+	virtualbox={
+		host.enable = true;
+		guest.enable = true;
+		};
+	containers.enable = true;
+	podman = {
+      enable = true;
+
+      # Create a `docker` alias for podman, to use it as a drop-in replacement
+      dockerCompat = true;
+
+      # Required for containers under podman-compose to be able to talk to each other.
+      defaultNetwork.settings.dns_enabled = true;
+    };
+	
+	};
 
   virtualisation.libvirtd = {
   enable = true;
