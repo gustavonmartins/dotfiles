@@ -7,6 +7,13 @@
   boot.supportedFilesystems = [ "zfs" ];
   boot.zfs.extraPools = [ "datapool" ];
 
+  /*
+  zfs set atime=off    datapool                                                                   
+  zfs set devices=off  datapool                                 
+  zfs set exec=off     datapool                                                                   
+  zfs set setuid=off   dadatapoolta  
+  */
+
   services.zfs.autoSnapshot = {                                                               
     enable = true;
     frequent = 0;  # disable 15-min snapshots
