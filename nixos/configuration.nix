@@ -5,19 +5,21 @@
 { inputs, config, lib, pkgs, ... }:
 
 {
-  imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-      inputs.home-manager.nixosModules.home-manager
-    ];
+  nix.package = pkgs.lixPackageSets.stable.lix;
+    nixpkgs.overlays = [ (final: prev: {
+    inherit (prev.lixPackageSets.stable)
+      nixpkgs-review
+      nix-eval-jobs
+      nix-fast-build
+      colmena;
+  }) ];
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.kernel.sysctl."net.ipv6.conf.eth0.disable_ipv6" = true;
   boot.kernelPackages = pkgs.linuxPackages_6_12;
-  networking.hostName = "elitebook"; # Define your hostname.
-
+  
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # Configure network proxy if necessary
@@ -116,6 +118,8 @@
     thunar-volman
     ];
   };
+
+  services.udisks2.enable = true;
   
   programs={
 	kdeconnect.enable = false;
@@ -163,7 +167,7 @@
 
   services = {
     syncthing = {
-      enable = false;
+      enable = true;
       user = "syncthing";
       group = "syncthing_grp";
       dataDir = "/mnt/syncthing";
@@ -195,7 +199,7 @@
     calibre-web = {
       enable = true;
       listen = {
-        ip = "0.0.0.0";
+        ip = "192.168.1.180";
         port = 8083;
       };
       options = {
@@ -231,16 +235,24 @@
 
     
     locations."/kavita/" = {
-      proxyPass = "http://0.0.0.0:5000";
+      proxyPass = "http://127.0.0.1:5000";
       
     };
     
     locations."/prowlarr/" = {
-      proxyPass = "http://0.0.0.0:9696";
+      proxyPass = "http://127.0.0.1:9696";
     };
     
     locations."/sonarr/" = {
-      proxyPass = "http://0.0.0.0:8989";
+      proxyPass = "http://127.0.0.1:8989";
+    };
+
+    locations."/radicale/" = {
+      proxyPass = "http://127.0.0.1:5232";
+    };
+
+    locations."/syncthing/" = {
+      proxyPass = "http://127.0.0.1:8384";
     };
     
     
@@ -260,32 +272,27 @@
   users.users = {
     gustavo = {
       isNormalUser = true;
-      extraGroups = ["kavita" "wheel" "jellyfin" "jellyfin_grp" "syncthing" "libvirtd"]; # Enable ‘sudo’ for the user.
+      extraGroups = ["kavita" "wheel" "jellyfin" "jellyfin_grp" "syncthing_grp" "libvirtd"]; # Enable ‘sudo’ for the user.
       packages = with pkgs; [
     #  thunderbird
       ];
       };
     aicoding = {isNormalUser=true;
+      home = "/home/aicoding";
+      createHome = true;
+      extraGroups = [ ]; # importantly: no "wheel", no "docker", etc.
     };
   };
   
    systemd.tmpfiles.rules = [
-    "d /mnt/jellyfin 1770 username jellyfin_grp -"
+    "d /mnt/jellyfin 1770 gustavo jellyfin_grp -"
+    "d /mnt/syncthing 2770 gustavo syncthing_grp -"
   ];
 
   # Allow unfree packages
   nixpkgs.config = {
     allowUnfree = true;
     
-  };
-
-  
-  home-manager = {
-    extraSpecialArgs = {inherit inputs;};
-    users = {
-      "gustavo" = import ./home.nix;
-      "aicoding" = import ./aicoding-home.nix;
-    };
   };
 
   # programs.firefox.enable = true;
@@ -304,7 +311,7 @@
   #  wget
   
 	# AI
-	claude-code
+	
     
     # Compression
     p7zip unzip xarchiver xz zip
@@ -328,15 +335,15 @@
     evince gnumeric libreoffice
     
     # Passwords
-    gnupg keepassxc
+    apacheHttpd.out gnupg keepassxc
 
     # Programming
-    bun deno git go golangci-lint gopls jq neovim nodejs plantuml python3 vscodium
+    gh git go golangci-lint gopls jq neovim plantuml python3 vscodium
     # Programming: Design
     nodePackages.mermaid-cli
     
     # System tools
-    eza htop lsd tree
+    eza htop lsd tree pkgs.home-manager
     
     # Search tools
     skim fzf ripgrep ripgrep-all
@@ -345,10 +352,10 @@
     geany #notepadqq
     
     # Terminals
-    tmux zellij
+    alacritty tmux waveterm zellij
 
     # Virtualization
-    dive docker-compose podman-tui qemu libvirt-glib
+    dive docker-compose krunvm podman-tui qemu libvirt-glib
   ];
   
   environment.sessionVariables = {
@@ -410,7 +417,7 @@
   # Or disable the firewall altogether.
   networking = {
     firewall = {
-      enable = true;
+      enable = false; #disables iptable, as nftable is used
     };
     nftables={
       enable=true;
@@ -447,8 +454,8 @@
           
           # Allow from KDE connect
           # allow KDE Connect ports both TCP and UDP 1714-1764
-          ip saddr @LAN tcp dport 1714-1764 accept
-          ip saddr @LAN udp dport 1714-1764 accept
+          ip saddr @LAN tcp dport 1714-1764 accept;
+          ip saddr @LAN udp dport 1714-1764 accept;
           
           # Allow ICMP (ping)
           ip protocol icmp icmp type echo-request accept;
@@ -461,6 +468,9 @@
           # Allow quake
           udp dport {26000,27500,27501,27510,28502,28503,28504,27036,27015,28800,28801} log prefix "quake incoming udp accepted: " accept;
           tcp dport {26000,27036,27015} log prefix "quake incoming udp accepted: " accept;
+
+          # Allow Radicale from LAN only
+          ip saddr @LAN tcp dport 5232 accept;
           
           
           # Default drop all other input
@@ -516,6 +526,8 @@
     # Optional: ignore local IP range to not ban internal addresses
     ignoreIP = ["127.0.0.1"];
   };
+
+  
   
   services.i2pd = {
     enable = false;

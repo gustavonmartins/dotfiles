@@ -47,6 +47,7 @@
     { device = "/dev/disk/by-label/NIXOS_TMP";
       fsType = "ext4";
       options = ["defaults" "noatime" "rw" "nodev" "noexec" "nosuid"];
+      
     };
     
   fileSystems."/var" =

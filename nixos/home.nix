@@ -20,7 +20,7 @@
     android-tools universal-android-debloater
     
     # Banking
-	secp256k1 sparrow # electrum
+	#secp256k1 sparrow # electrum
 	
 	# Bluetooth
 	bluez bluez-tools
@@ -36,9 +36,12 @@
 	
 	# Downloads
     qbittorrent uget
-    
+
+    # Encryption
+    openssl
+
     # Games
-    ezquake openttd redeclipse sauerbraten unvanquished xonotic #assaultcube barony urbanterror
+    #ezquake openttd redeclipse sauerbraten unvanquished xonotic #assaultcube barony urbanterror
     
     # Pictures management
     digikam exiftool
