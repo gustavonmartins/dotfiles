@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
   home.username = "gustavo";
@@ -12,42 +17,51 @@
   # want to update the value, then make sure to first check the Home Manager
   # release notes.
   home.stateVersion = "25.05"; # Please read the comment before changing.
- 
 
   home.packages = with pkgs; [
-  
-	## Android tools
-    android-tools universal-android-debloater
-    
+
+    ## Android tools
+    android-tools
+    universal-android-debloater
+
     # Banking
-	#secp256k1 sparrow # electrum
-	
-	# Bluetooth
-	bluez bluez-tools
-	
-	# Cloud
-	google-cloud-sdk rclone
-	
-	# Communication
+    #secp256k1 sparrow # electrum
+
+    # Bluetooth
+    bluez
+    bluez-tools
+
+    # Cloud
+    google-cloud-sdk
+    rclone
+
+    # Communication
     gajim
-    
+
     # Configurations
     stow
-	
-	# Downloads
-    qbittorrent uget
+
+    # Downloads
+    qbittorrent
+    uget
 
     # Encryption
     openssl
 
     # Games
     #ezquake openttd redeclipse sauerbraten unvanquished xonotic #assaultcube barony urbanterror
-    
+
     # Pictures management
-    digikam exiftool
+    digikam
+    exiftool
+
+    # VPN
+    qrencode
 
     # System
+    glxinfo
     lsof
+    pciutils
   ];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
@@ -85,14 +99,13 @@
     # EDITOR = "emacs";
     TMPDIR = "/home/gustavo/my-tmp";
   };
-  
-  programs.bash = {                                                                          
-    enable = true;                                                                           
-    sessionVariables = {                                                                     
-      CGO_ENABLED = "0";                                                                     
-    };                                                                                       
+
+  programs.bash = {
+    enable = true;
+    sessionVariables = {
+      CGO_ENABLED = "0";
+    };
   };
-  
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;

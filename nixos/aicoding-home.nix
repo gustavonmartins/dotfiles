@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
   home.username = "aicoding";
@@ -14,14 +19,7 @@
   home.stateVersion = "25.05"; # Please read the comment before changing.
 
   home.packages = with pkgs; [
-  
-	
-	
-	# Bluetooth
-	bluez bluez-tools
-    
-    # System
-    lsof
+    claude-code
   ];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
@@ -58,7 +56,6 @@
   home.sessionVariables = {
     # EDITOR = "emacs";
   };
-  
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;

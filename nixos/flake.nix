@@ -12,40 +12,45 @@
     #  inputs.nixpkgs.follows = "nixpkgs";
     #  #inputs.lix.follows = "lix";
     #};
-    
+
     home-manager = {
       url = "github:nix-community/home-manager/release-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
   #outputs = { self, nixpkgs, home-manager, lix-module,lix, ... }@inputs: #{
-  outputs = { self, nixpkgs,home-manager, ... }@inputs: #{
+  outputs =
+    {
+      self,
+      nixpkgs,
+      home-manager,
+      ...
+    }@inputs: # {
     let
-      system="x86_64-linux";
-      pkgs=import nixpkgs {
+      system = "x86_64-linux";
+      pkgs = import nixpkgs {
         inherit system;
       };
-    in {
+    in
+    {
       nixosConfigurations = {
         blackview = nixpkgs.lib.nixosSystem {
-          specialArgs={inherit inputs system;};
-          modules =[
+          specialArgs = { inherit inputs system; };
+          modules = [
             ./blackview-hardware-configuration.nix
             ./configuration.nix
             ./blackview.nix
 
             home-manager.nixosModules.home-manager
-				{
-				  home-manager.useGlobalPkgs = true;
-				  home-manager.useUserPackages = true;
-				}
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+            }
           ];
-        
-      };
-        
-        
+
+        };
+
       };
     };
   #};
 }
-
