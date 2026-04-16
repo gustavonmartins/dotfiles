@@ -119,8 +119,8 @@ myConfig =
               (smartBorders) $
            --  ThreeCol 1 (3 / 100) (1 / 2) |||
               (Docks.avoidStruts (Tall 1 (3 / 100) (1 / 2))) |||
-              (Docks.avoidStruts (Mirror (ThreeCol 1 (3 / 100) (1 / 2))) |||
-               Full ||| (Docks.avoidStruts (Mirror (Tall 1 (3 / 100) (1 / 2)))))
+              (Docks.avoidStruts (Mirror (ThreeCol 1 (3 / 100) (1 / 2)))) |||
+               Full ||| (Docks.avoidStruts (Mirror (Tall 1 (3 / 100) (1 / 2))))
         }
 
 main = (xmonad . ewmh) myConfig
