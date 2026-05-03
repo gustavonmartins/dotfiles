@@ -206,7 +206,7 @@
       group = "jellyfin_grp";
     };
     radarr = {
-      enable = false;
+      enable = true;
       user = "radarr";
       group = "jellyfin_grp";
     };
@@ -426,6 +426,7 @@
     htop
     lsd
     tree
+    zsh
 
     # Search tools
     fzf
@@ -525,7 +526,7 @@
           set LAN {
             type ipv4_addr;
             flags interval;
-            elements = { 192.168.0.0/24, 192.168.1.0/24 }
+            elements = { 192.168.0.0/16, 192.168.1.0/16 }
           }
 
           chain input {
@@ -570,7 +571,7 @@
             tcp dport {26000,27036,27015} log prefix "quake incoming udp accepted: " accept;
 
             # Allow Radicale from LAN only
-            ip saddr @LAN ip daddr 192.168.1.180 tcp dport 5232 accept;
+            ip saddr @LAN ip daddr 192.168.1.180/16 tcp dport 5232 accept;
 
             # Default drop all other input
             log prefix "Incoming  blocked: " drop;
@@ -645,7 +646,21 @@
         ClientUseIPv6 = false;
       };
     };
+    
+    
   };
+ 
+  
+  
+  # FLATPAK
+  xdg.portal.enable = true;
+  xdg.portal.extraPortals = [
+    pkgs.xdg-desktop-portal-gtk
+  ];
+  services.flatpak = {
+    enable = true;};
+   
+   #FLATPAK END
 
   # Fonts
   fonts.packages = with pkgs; [
