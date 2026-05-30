@@ -29,6 +29,18 @@
   boot.kernel.sysctl."net.ipv6.conf.eth0.disable_ipv6" = true;
   boot.kernelPackages = pkgs.linuxPackages_6_12;
 
+  security.lockKernelModules = true;
+  boot.extraModprobeConfig = ''
+    install esp4 ${pkgs.coreutils}/bin/false
+    install esp6 ${pkgs.coreutils}/bin/false
+    install rxrpc ${pkgs.coreutils}/bin/false
+  '';
+  boot.blacklistedKernelModules = [
+    "esp4"
+    "esp6"
+    "rxrpc"
+  ];
+
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # Configure network proxy if necessary
@@ -83,15 +95,21 @@
         xmonad = {
           enable = true;
           enableContribAndExtras = true;
-          extraPackages = haskellPackages : [
-          haskellPackages.xmonad-contrib
-          haskellPackages.xmonad-extras
-          haskellPackages.xmonad
-        ];
+          extraPackages = haskellPackages: [
+            haskellPackages.xmonad-contrib
+            haskellPackages.xmonad-extras
+            haskellPackages.xmonad
+          ];
         };
       };
 
     };
+    desktopManager = {
+      plasma6 = {
+        enable = false;
+      };
+    };
+
     displayManager.defaultSession = "xfce+xmonad";
     # prevents video bugs like tearing or freezing after inacitivit using Intel GPU
     picom = {
@@ -217,7 +235,7 @@
     jellyseerr.enable = false;
 
     calibre-web = {
-      enable = true;
+      enable = false;
       listen = {
         ip = "192.168.1.180";
         port = 8083;
@@ -646,21 +664,19 @@
         ClientUseIPv6 = false;
       };
     };
-    
-    
+
   };
- 
-  
-  
+
   # FLATPAK
   xdg.portal.enable = true;
   xdg.portal.extraPortals = [
     pkgs.xdg-desktop-portal-gtk
   ];
   services.flatpak = {
-    enable = true;};
-   
-   #FLATPAK END
+    enable = true;
+  };
+
+  #FLATPAK END
 
   # Fonts
   fonts.packages = with pkgs; [
