@@ -149,7 +149,7 @@
   };
   programs.thunar = {
     enable = true;
-    plugins = with pkgs.xfce; [
+    plugins = with pkgs; [
       thunar-archive-plugin
       thunar-volman
     ];
@@ -232,7 +232,7 @@
       enable = true;
     };
 
-    jellyseerr.enable = false;
+    seerr.enable = false;
 
     calibre-web = {
       enable = false;
@@ -380,13 +380,13 @@
     # Desktop
     awesome
     rofi
-    xfce.xfconf
-    xfce.xfce4-fsguard-plugin
-    xfce.gigolo
-    xfce.xfce4-netload-plugin
-    xfce.orage
-    xfce.xfce4-weather-plugin
-    xfce.xfce4-xkb-plugin
+    xfconf
+    xfce4-fsguard-plugin
+    gigolo
+    xfce4-netload-plugin
+    orage
+    xfce4-weather-plugin
+    xfce4-xkb-plugin
 
     # Internet browsers
     brave
@@ -412,7 +412,7 @@
     sshfs # for kde connect
 
     # nixos
-    nixfmt-rfc-style
+    nixfmt
 
     # Office
     evince
@@ -435,8 +435,6 @@
     plantuml
     python3
     vscodium
-    # Programming: Design
-    nodePackages.mermaid-cli
 
     # System tools
     eza

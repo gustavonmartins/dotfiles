@@ -11,6 +11,7 @@
 
   boot.supportedFilesystems = [ "zfs" ];
   boot.zfs.extraPools = [ "datapool" ];
+  boot.zfs.forceImportRoot = false;
 
   /*
     zfs set atime=off    datapool
