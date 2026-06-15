@@ -18,6 +18,12 @@
   # release notes.
   home.stateVersion = "25.05"; # Please read the comment before changing.
 
+  nixpkgs.config.allowUnfreePredicate =
+    pkg:
+    builtins.elem (lib.getName pkg) [
+      "zoom"
+    ];
+
   home.packages = with pkgs; [
 
     ## Android tools
@@ -51,6 +57,9 @@
     # Games
     #ezquake openttd redeclipse sauerbraten unvanquished xonotic #assaultcube barony urbanterror
 
+    # Meetings
+    zoom-us
+
     # Pictures management
     digikam
     exiftool
@@ -59,7 +68,7 @@
     qrencode
 
     # System
-    glxinfo
+    mesa-demos
     lsof
     pciutils
   ];
@@ -100,10 +109,20 @@
     TMPDIR = "/home/gustavo/my-tmp";
   };
 
-  programs.bash = {
-    enable = true;
-    sessionVariables = {
-      CGO_ENABLED = "0";
+  programs = {
+    bash = {
+      enable = true;
+      sessionVariables = {
+        CGO_ENABLED = "0";
+      };
+    };
+
+  };
+
+  services = {
+    kdeconnect = {
+      enable = true;
+      indicator = true;
     };
   };
 

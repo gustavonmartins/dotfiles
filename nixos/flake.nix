@@ -49,6 +49,21 @@
           ];
 
         };
+        elitebook = nixpkgs.lib.nixosSystem {
+          specialArgs = { inherit inputs system; };
+          modules = [
+            ./elitebook-hardware-configuration.nix
+            ./configuration.nix
+            ./elitebook.nix
+
+            home-manager.nixosModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+            }
+          ];
+
+        };
 
       };
     };

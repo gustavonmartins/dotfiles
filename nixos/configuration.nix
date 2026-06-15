@@ -106,7 +106,7 @@
     };
     desktopManager = {
       plasma6 = {
-        enable = false;
+        enable = true;
       };
     };
 
@@ -158,7 +158,7 @@
   services.udisks2.enable = true;
 
   programs = {
-    kdeconnect.enable = false;
+    
 
     firejail = {
       enable = false;
@@ -452,6 +452,7 @@
 
     # Text editors
     geany # notepadqq
+    vi
 
     # Terminals
     alacritty
