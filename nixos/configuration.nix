@@ -106,11 +106,14 @@
     };
     desktopManager = {
       plasma6 = {
+        enable = false;
+      };
+      gnome = {
         enable = true;
       };
     };
 
-    displayManager.defaultSession = "xfce+xmonad";
+    displayManager.gdm.enable = true;
     # prevents video bugs like tearing or freezing after inacitivit using Intel GPU
     picom = {
       enable = true;
@@ -158,7 +161,6 @@
   services.udisks2.enable = true;
 
   programs = {
-    
 
     firejail = {
       enable = false;
@@ -452,7 +454,7 @@
 
     # Text editors
     geany # notepadqq
-    vi
+    vim
 
     # Terminals
     alacritty
