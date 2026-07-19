@@ -84,16 +84,16 @@
       xkb.variant = "";
       desktopManager = {
         xfce = {
-          enable = true;
+          enable = false;
           noDesktop = false;
           enableXfwm = false;
         };
       };
       windowManager = {
-        awesome.enable = true;
-        qtile.enable = true;
+        awesome.enable = false;
+        qtile.enable = false;
         xmonad = {
-          enable = true;
+          enable = false;
           enableContribAndExtras = true;
           extraPackages = haskellPackages: [
             haskellPackages.xmonad-contrib
