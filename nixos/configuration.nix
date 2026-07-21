@@ -426,17 +426,25 @@
     gnupg
     keepassxc
 
-    # Programming
-    gh
-    git
+    # Programming languages
+    deno
     go
     golangci-lint
     gopls
+    # nodejs
+    python3
+    uv
+
+    # Programming tools
+    gh
+    git
     jq
     neovim
     plantuml
-    python3
+    postgresql
+    sqlite
     vscodium
+    windsurf
 
     # System tools
     eza
