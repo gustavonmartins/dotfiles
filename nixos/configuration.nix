@@ -108,12 +108,11 @@
       plasma6 = {
         enable = false;
       };
-      gnome = {
-        enable = true;
-      };
     };
-
+    desktopManager.gnome.enable = true;
+    gvfs.enable = true;
     displayManager.gdm.enable = true;
+
     # prevents video bugs like tearing or freezing after inacitivit using Intel GPU
     picom = {
       enable = true;
@@ -210,7 +209,14 @@
       enable = true;
       user = "syncthing";
       group = "syncthing_grp";
-      dataDir = "/mnt/syncthing";
+      folders = {
+        "KP" = {
+          "path" = "/mnt/syncthing/kp";
+        };
+        "text" = {
+          "path" = "/mnt/syncthing/text";
+        };
+      };
       overrideFolders = false;
       overrideDevices = false;
     };
@@ -363,7 +369,12 @@
   # Banking
   programs.nix-ld.enable = true;
   programs.nix-ld.libraries = with pkgs; [
+    #glibc
+    #libffi
+    #openssl
     secp256k1
+    stdenv.cc.cc.lib
+    #zlib
   ];
 
   environment.systemPackages = with pkgs; [
@@ -397,6 +408,12 @@
     tor-browser
     ungoogled-chromium
 
+    #speech-note    # GUI transcription app
+    #handy
+    #nerd-dictation # Minimalist push-to-talk dictation
+    voxtype
+    whisper-cpp
+
     # Mail
     isync
     kdePackages.kmail
@@ -428,11 +445,13 @@
 
     # Programming languages
     deno
+    # gcc
     go
     golangci-lint
     gopls
     # nodejs
     python3
+    stdenv.cc.cc.lib
     uv
 
     # Programming tools
@@ -444,7 +463,6 @@
     postgresql
     sqlite
     vscodium
-    windsurf
 
     # System tools
     eza
@@ -452,6 +470,7 @@
     htop
     lsd
     tree
+    usbutils
     zsh
 
     # Search tools
@@ -462,13 +481,14 @@
 
     # Text editors
     geany # notepadqq
+    obsidian
     vim
 
     # Terminals
-    alacritty
-    kitty
+    #alacritty
+    #kitty
     tmux
-    waveterm
+    #waveterm
     wezterm
     zellij
 
@@ -488,6 +508,8 @@
     TMPDIR = "$HOME/.tmp";
     TMP = "$HOME/.tmp";
     TEMP = "$HOME/.tmp";
+    QT_QPA_PLATFORM = "wayland";
+    LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath [ pkgs.stdenv.cc.cc.lib ];
   };
 
   # Create the directory on login (optional, using pam)
@@ -553,7 +575,7 @@
           set LAN {
             type ipv4_addr;
             flags interval;
-            elements = { 192.168.0.0/16, 192.168.1.0/16 }
+            elements = { 192.168.0.0/16}
           }
 
           chain input {
@@ -665,6 +687,8 @@
     };
     tor = {
       enable = true;
+      client.enable = true;
+      torsocks.enable = true;
       # Optional settings
       enableGeoIP = false; # disables GeoIP to avoid country-based statistics
       # Additional configuration can be specified in 'settings'
