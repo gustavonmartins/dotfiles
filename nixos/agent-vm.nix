@@ -1,37 +1,72 @@
 {
-              nixpkgs.hostPlatform = system;
-              networking.hostName = "agent-vm";
+  system,
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
-              environment.systemPackages = [ pkgs.opencode ];
+{
+  nixpkgs.hostPlatform = system;
+  networking.hostName = "agent-vm";
 
-              users.users.agent = {
-                isNormalUser = true;
-                initialPassword = "test"; # ← add this
-              };
+  environment.systemPackages = with pkgs; [
+    opencode
 
-              microvm = {
-                hypervisor = "qemu";
-                qemu.serialConsole = true;
+    # Programming
 
-                volumes = [
-                  {
-                    image = "nix.img";
-                    mountPoint = "/";
-                    size = 20480;
-                  }
-                ];
-                #user = "aicoding";
-                interfaces = [
-                  {
-                    type = "user";
-                    id = "agent-vm";
-                    mac = "02:00:00:00:00:01";
-                  }
-                ];
-                forwardPorts = [ ];
-                vcpu = 4;
-                mem = 4096;
-              };
+    deno
+  ];
 
-            }
+  users.users.agent = {
+    isNormalUser = true;
+    initialPassword = "test";
+  };
 
+  microvm = {
+    hypervisor = "qemu";
+    qemu.serialConsole = true;
+
+    volumes = [
+      {
+        image = "nix.img";
+        mountPoint = "/";
+        size = 20480;
+      }
+    ];
+    #user = "aicoding";
+    interfaces = [
+      {
+        type = "user";
+        id = "agent-vm";
+        mac = "02:00:00:00:00:01";
+      }
+    ];
+    vcpu = 4;
+    mem = 4096;
+    forwardPorts = [
+      {
+        from = "host";
+        host.address = "127.0.0.1";
+        host.port = 2222;
+        guest.port = 22;
+
+      }
+      # Opencode web
+      {
+        from = "host";
+        host.address = "127.0.0.1";
+        host.port = 4096;
+        guest.port = 4096;
+      }
+    ];
+  };
+
+  services.openssh = {
+    settings = {
+      PermitRootLogin = "no";
+    };
+    enable = true;
+  };
+
+}

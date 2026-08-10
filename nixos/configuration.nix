@@ -7,6 +7,7 @@
   config,
   lib,
   pkgs,
+  self,
   ...
 }:
 
@@ -27,7 +28,11 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.kernel.sysctl."net.ipv6.conf.eth0.disable_ipv6" = true;
-  boot.kernelPackages = pkgs.linuxPackages_6_12;
+  boot.kernelModules = [
+    "usb_storage"
+    "uas"
+  ];
+  # boot.kernelPackages = pkgs.linuxPackages_6_12;
 
   security.lockKernelModules = true;
   boot.extraModprobeConfig = ''
@@ -318,6 +323,8 @@
           "jellyfin_grp"
           "syncthing_grp"
           "libvirtd"
+          "kvm"
+          "microvm"
         ]; # Enable ‘sudo’ for the user.
         packages = with pkgs; [
           #  thunderbird
@@ -326,9 +333,11 @@
       aicoding = {
         isNormalUser = true;
         home = "/home/aicoding";
+        homeMode = "0711";
         createHome = true;
         extraGroups = [ ]; # importantly: no "wheel", no "docker", etc.
       };
+
       calibre = {
         isSystemUser = true;
         group = "jellyfin_grp";
@@ -353,6 +362,7 @@
   systemd.tmpfiles.rules = [
     "d /mnt/jellyfin 1770 gustavo jellyfin_grp -"
     "d /mnt/syncthing 2770 gustavo syncthing_grp -"
+
   ];
 
   # Allow unfree packages
@@ -458,7 +468,6 @@
     gh
     git
     jq
-    neovim
     plantuml
     postgresql
     sqlite
@@ -481,12 +490,16 @@
 
     # Text editors
     geany # notepadqq
+    glow # for md files
+    neovim
     obsidian
+    pandoc
     vim
 
     # Terminals
-    #alacritty
-    #kitty
+    alacritty
+    ghostty
+    kitty
     tmux
     #waveterm
     wezterm
@@ -546,6 +559,14 @@
 
   programs.virt-manager.enable = true;
 
+  microvm = {
+    host.enable = true;
+    stateDir = "/home/aicoding/agent-vm";
+  };
+  microvm.vms.agent-vm = {
+    flake = self;
+  };
+
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   # programs.mtr.enable = true;
@@ -571,92 +592,97 @@
       enable = true;
       flushRuleset = true;
       ruleset = ''
-        table inet filter {
-          set LAN {
-            type ipv4_addr;
-            flags interval;
-            elements = { 192.168.0.0/16}
-          }
+                table inet filter {
+                  set LAN {
+                    type ipv4_addr;
+                    flags interval;
+                    elements = { 192.168.0.0/16}
+                  }
+        	  set PRIVATE4 {
+                  type ipv4_addr;
+                  flags interval;
+                       elements = { 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16,
+                               169.254.0.0/16, 100.64.0.0/10 }}
+                  chain input {
+                    type filter hook input priority 0; policy drop;
+                    
+                    # Allow loopback
+                    iif lo accept;
+                    # alow wireguard
+                    # udp dport 51820 accept
+                    
+                    # Allow replies to connections initiated by myself
+                    ct state established,related accept;
+                    # Allow HTTP
+                    ip saddr @LAN tcp dport {80,443} accept;
 
-          chain input {
-            type filter hook input priority 0; policy drop;
-            
-            # Allow loopback
-            iif lo accept;
-            # alow wireguard
-            # udp dport 51820 accept
-            
-            # Allow replies to connections initiated by myself
-            ct state established,related accept;
-            # Allow HTTP
-            ip saddr @LAN tcp dport {80,443} accept;
+                    # Allow from jellyfin
+                    ip saddr @LAN ip daddr 192.168.1.180/16 tcp dport 8096 accept;
+                    ip saddr @LAN ip daddr 192.168.1.180/16 udp dport 7359 accept;
+                    
+                    # Allow from kavita
+                    ip saddr @LAN tcp dport 5000 accept;
+                    
+                    # Allow from syncthing
+                    ip saddr @LAN tcp dport 22000 accept;
+                    ip saddr @LAN udp dport {21027,22000} accept;
+                    
+                    # Allow from KDE connect
+                    # allow KDE Connect ports both TCP and UDP 1714-1764
+                    ip saddr @LAN tcp dport 1714-1764 accept;
+                    ip saddr @LAN udp dport 1714-1764 accept;
+                    
+                    # Allow ICMP (ping)
+                    ip protocol icmp icmp type echo-request accept;
+                    ip protocol icmp icmp type echo-reply accept;
+                    
+                    # Allow bittorrent
+                    tcp dport {65000,6771} log prefix "bittorrent incoming tcp accepted: " accept;
+                    udp dport {65000,6771} log prefix "bittorrent incoming udp accepted: " accept;
+                    
+                    # Allow quake
+                    udp dport {26000,27500,27501,27510,28502,28503,28504,27036,27015,28800,28801} log prefix "quake incoming udp accepted: " accept;
+                    tcp dport {26000,27036,27015} log prefix "quake incoming udp accepted: " accept;
 
-            # Allow from jellyfin
-            ip saddr @LAN ip daddr 192.168.1.180/16 tcp dport 8096 accept;
-            ip saddr @LAN ip daddr 192.168.1.180/16 udp dport 7359 accept;
-            
-            # Allow from kavita
-            ip saddr @LAN tcp dport 5000 accept;
-            
-            # Allow from syncthing
-            ip saddr @LAN tcp dport 22000 accept;
-            ip saddr @LAN udp dport {21027,22000} accept;
-            
-            # Allow from KDE connect
-            # allow KDE Connect ports both TCP and UDP 1714-1764
-            ip saddr @LAN tcp dport 1714-1764 accept;
-            ip saddr @LAN udp dport 1714-1764 accept;
-            
-            # Allow ICMP (ping)
-            ip protocol icmp icmp type echo-request accept;
-            ip protocol icmp icmp type echo-reply accept;
-            
-            # Allow bittorrent
-            tcp dport {65000,6771} log prefix "bittorrent incoming tcp accepted: " accept;
-            udp dport {65000,6771} log prefix "bittorrent incoming udp accepted: " accept;
-            
-            # Allow quake
-            udp dport {26000,27500,27501,27510,28502,28503,28504,27036,27015,28800,28801} log prefix "quake incoming udp accepted: " accept;
-            tcp dport {26000,27036,27015} log prefix "quake incoming udp accepted: " accept;
+                    # Allow Radicale from LAN only
+                    ip saddr @LAN ip daddr 192.168.1.180/16 tcp dport 5232 accept;
 
-            # Allow Radicale from LAN only
-            ip saddr @LAN ip daddr 192.168.1.180/16 tcp dport 5232 accept;
+                    # Default drop all other input
+                    log prefix "Incoming  blocked: " drop;
+                  }
 
-            # Default drop all other input
-            log prefix "Incoming  blocked: " drop;
-          }
+                  chain output {
+                    type filter hook output priority 0; policy accept;
+                    
+                    # Allow loopback
+                    # oif lo accept;
+                    
+                    # Allow replies to connections initiated by myself
+                    # ct state established,related log prefix "Outgoing  accepted from before: " accept;
+                    
+                    # allow DHCP NTP DNS
+                    # udp dport {68, 123, 53 } log prefix "Outgoing UDP accepted: " accept
+                    
+                    # allow HTTP, HTTPS
+                    # tcp dport {80, 443} log prefix "Outgoing TCP accepted: " accept;
+                    
+                    # allow BIT TOrrent
+                    # tcp dport 6881-6999 log prefix "bittorrent outgoing tcp accepted: " accept;
+                    
+                    # All outgoing traffic accepted
+                    
+                    # log prefix "Outgoing  blocked: " drop;
+                    
+                  }
 
-          chain output {
-            type filter hook output priority 0; policy accept;
-            
-            # Allow loopback
-            # oif lo accept;
-            
-            # Allow replies to connections initiated by myself
-            # ct state established,related log prefix "Outgoing  accepted from before: " accept;
-            
-            # allow DHCP NTP DNS
-            # udp dport {68, 123, 53 } log prefix "Outgoing UDP accepted: " accept
-            
-            # allow HTTP, HTTPS
-            # tcp dport {80, 443} log prefix "Outgoing TCP accepted: " accept;
-            
-            # allow BIT TOrrent
-            # tcp dport 6881-6999 log prefix "bittorrent outgoing tcp accepted: " accept;
-            
-            # All outgoing traffic accepted
-            
-            # log prefix "Outgoing  blocked: " drop;
-          }
+                  chain forward {
+                    type filter hook forward priority 0; policy drop;
+                    # allow VPN traffic to forward
+                    #iifname wg0 accept
+                    #oifname wg0 accept
 
-          chain forward {
-            type filter hook forward priority 0; policy drop;
-            # allow VPN traffic to forward
-            #iifname wg0 accept
-            #oifname wg0 accept
-
-          }
-        }
+                  }
+                }
       '';
     };
   };
