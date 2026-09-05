@@ -8,6 +8,7 @@
   lib,
   pkgs,
   self,
+
   ...
 }:
 
@@ -29,8 +30,12 @@
   boot.loader.efi.canTouchEfiVariables = true;
   boot.kernel.sysctl."net.ipv6.conf.eth0.disable_ipv6" = true;
   boot.kernelModules = [
-    "usb_storage"
+    "isofs"
     "uas"
+    "usb_storage"
+    "nf_chain_nat"
+    "nf_nat"
+    "vhost_vsock"
   ];
   # boot.kernelPackages = pkgs.linuxPackages_6_12;
 
@@ -495,6 +500,7 @@
     obsidian
     pandoc
     vim
+    zed
 
     # Terminals
     alacritty
@@ -531,10 +537,10 @@
   users.extraGroups.vboxusers.members = [ "gustavo" ];
 
   virtualisation = {
-    virtualbox = {
-      host.enable = true;
-      guest.enable = true;
-    };
+    #virtualbox = {
+    #  host.enable = true;
+    #  guest.enable = true;
+    #};
     containers.enable = true;
     podman = {
       enable = true;
@@ -565,6 +571,7 @@
   };
   microvm.vms.agent-vm = {
     flake = self;
+    autostart = false;
   };
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -584,6 +591,15 @@
   # networking.firewall.allowedTCPPorts = [ ... ];
   # networking.firewall.allowedUDPPorts = [ ... ];
   # Or disable the firewall altogether.
+  boot.kernel.sysctl."net.ipv4.ip_forward" = 1;
+
+  networking.interfaces."agent-vm".ipv4.addresses = [
+    {
+      address = "192.168.100.1";
+      prefixLength = 24;
+    }
+  ];
+
   networking = {
     firewall = {
       enable = false; # disables iptable, as nftable is used
@@ -592,97 +608,157 @@
       enable = true;
       flushRuleset = true;
       ruleset = ''
-                table inet filter {
-                  set LAN {
-                    type ipv4_addr;
-                    flags interval;
-                    elements = { 192.168.0.0/16}
-                  }
-        	  set PRIVATE4 {
-                  type ipv4_addr;
-                  flags interval;
-                       elements = { 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16,
-                               169.254.0.0/16, 100.64.0.0/10 }}
-                  chain input {
-                    type filter hook input priority 0; policy drop;
-                    
-                    # Allow loopback
-                    iif lo accept;
-                    # alow wireguard
-                    # udp dport 51820 accept
-                    
-                    # Allow replies to connections initiated by myself
-                    ct state established,related accept;
-                    # Allow HTTP
-                    ip saddr @LAN tcp dport {80,443} accept;
+                                                table inet filter {
+                                                  set LAN {
+                                                    type ipv4_addr;
+                                                    flags interval;
+                                                    elements = { 192.168.0.0/16}
+                                                  }
+                                        	  set PRIVATE4 {
+                                                  type ipv4_addr;
+                                                  flags interval;
+                                                       elements = { 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16,
+                                                               169.254.0.0/16, 100.64.0.0/10 }}
+                                                  chain input {
+                                                    type filter hook input priority 0; policy drop;
+                                                    
+                                                    # Allow loopback
+                                                    iif lo accept;
 
-                    # Allow from jellyfin
-                    ip saddr @LAN ip daddr 192.168.1.180/16 tcp dport 8096 accept;
-                    ip saddr @LAN ip daddr 192.168.1.180/16 udp dport 7359 accept;
-                    
-                    # Allow from kavita
-                    ip saddr @LAN tcp dport 5000 accept;
-                    
-                    # Allow from syncthing
-                    ip saddr @LAN tcp dport 22000 accept;
-                    ip saddr @LAN udp dport {21027,22000} accept;
-                    
-                    # Allow from KDE connect
-                    # allow KDE Connect ports both TCP and UDP 1714-1764
-                    ip saddr @LAN tcp dport 1714-1764 accept;
-                    ip saddr @LAN udp dport 1714-1764 accept;
-                    
-                    # Allow ICMP (ping)
-                    ip protocol icmp icmp type echo-request accept;
-                    ip protocol icmp icmp type echo-reply accept;
-                    
-                    # Allow bittorrent
-                    tcp dport {65000,6771} log prefix "bittorrent incoming tcp accepted: " accept;
-                    udp dport {65000,6771} log prefix "bittorrent incoming udp accepted: " accept;
-                    
-                    # Allow quake
-                    udp dport {26000,27500,27501,27510,28502,28503,28504,27036,27015,28800,28801} log prefix "quake incoming udp accepted: " accept;
-                    tcp dport {26000,27036,27015} log prefix "quake incoming udp accepted: " accept;
+                                		   iifname "agent-vm" drop;
 
-                    # Allow Radicale from LAN only
-                    ip saddr @LAN ip daddr 192.168.1.180/16 tcp dport 5232 accept;
+                                                    # alow wireguard
+                                                    # udp dport 51820 accept
+                                                    
+                                		    
 
-                    # Default drop all other input
-                    log prefix "Incoming  blocked: " drop;
-                  }
 
-                  chain output {
-                    type filter hook output priority 0; policy accept;
-                    
-                    # Allow loopback
-                    # oif lo accept;
-                    
-                    # Allow replies to connections initiated by myself
-                    # ct state established,related log prefix "Outgoing  accepted from before: " accept;
-                    
-                    # allow DHCP NTP DNS
-                    # udp dport {68, 123, 53 } log prefix "Outgoing UDP accepted: " accept
-                    
-                    # allow HTTP, HTTPS
-                    # tcp dport {80, 443} log prefix "Outgoing TCP accepted: " accept;
-                    
-                    # allow BIT TOrrent
-                    # tcp dport 6881-6999 log prefix "bittorrent outgoing tcp accepted: " accept;
-                    
-                    # All outgoing traffic accepted
-                    
-                    # log prefix "Outgoing  blocked: " drop;
-                    
-                  }
+                                                    # Allow replies to connections initiated by myself
+                                                    ct state established,related accept;
 
-                  chain forward {
-                    type filter hook forward priority 0; policy drop;
-                    # allow VPN traffic to forward
-                    #iifname wg0 accept
-                    #oifname wg0 accept
 
-                  }
-                }
+
+                                                    # Allow HTTP
+                                                    ip saddr @LAN tcp dport {80,443} accept;
+
+                                                    # Allow from jellyfin
+                                                    ip saddr @LAN ip daddr 192.168.1.180/16 tcp dport 8096 accept;
+                                                    ip saddr @LAN ip daddr 192.168.1.180/16 udp dport 7359 accept;
+                                                    
+                                                    # Allow from kavita
+                                                    ip saddr @LAN tcp dport 5000 accept;
+                                                    
+                                                    # Allow from syncthing
+                                                    ip saddr @LAN tcp dport 22000 accept;
+                                                    ip saddr @LAN udp dport {21027,22000} accept;
+                                                    
+                                                    # Allow from KDE connect
+                                                    # allow KDE Connect ports both TCP and UDP 1714-1764
+                                                    ip saddr @LAN tcp dport 1714-1764 accept;
+                                                    ip saddr @LAN udp dport 1714-1764 accept;
+                                                    
+                                                    # Allow ICMP (ping)
+                                                    ip protocol icmp icmp type echo-request accept;
+                                                    ip protocol icmp icmp type echo-reply accept;
+                                                    
+                                                    # Allow bittorrent
+                                                    tcp dport {65000,6771} log prefix "bittorrent incoming tcp accepted: " accept;
+                                                    udp dport {65000,6771} log prefix "bittorrent incoming udp accepted: " accept;
+                                                    
+                                                    # Allow quake
+                                                    udp dport {26000,27500,27501,27510,28502,28503,28504,27036,27015,28800,28801} log prefix "quake incoming udp accepted: " accept;
+                                                    tcp dport {26000,27036,27015} log prefix "quake incoming udp accepted: " accept;
+
+                                                    # Allow Radicale from LAN only
+                                                    ip saddr @LAN ip daddr 192.168.1.180/16 tcp dport 5232 accept;
+
+                                                    # Default drop all other input
+                                                    log prefix "Incoming  blocked: " drop;
+                                                  }
+
+                                                  chain output {
+                                                    type filter hook output priority 0; policy accept;
+
+                                  	    oifname "agent-vm" drop;
+                                                    
+                                                    # Allow loopback
+                                                    # oif lo accept;
+                                                    
+                                                    # Allow replies to connections initiated by myself
+                                                    # ct state established,related log prefix "Outgoing  accepted from before: " accept;
+                                                    
+                                                    # allow DHCP NTP DNS
+                                                    # udp dport {68, 123, 53 } log prefix "Outgoing UDP accepted: " accept
+                                                    
+                                                    # allow HTTP, HTTPS
+                                                    # tcp dport {80, 443} log prefix "Outgoing TCP accepted: " accept;
+                                                    
+                                                    # allow BIT TOrrent
+                                                    # tcp dport 6881-6999 log prefix "bittorrent outgoing tcp accepted: " accept;
+                                                    
+                                                    # All outgoing traffic accepted
+                                                    
+                                                    # log prefix "Outgoing  blocked: " drop;
+                                                    
+                                                  }
+
+                                                  chain forward {
+                                                    type filter hook forward priority 0; policy drop;
+
+
+                                                    # allow VPN traffic to forward
+                                                    #iifname wg0 accept
+                                                    #oifname wg0 accept
+
+
+
+                                  # Permit replies to connections initiated by the VM.
+                                  ct state established,related accept;
+
+                                  # LAN, host interfaces, and Internet cannot initiate new connections into VM.
+                                  iifname != "agent-vm" oifname "agent-vm" drop;
+
+
+
+                  # Only the configured VM MAC may send through this TAP interface.
+                  iifname "agent-vm"
+                    ether saddr != 02:00:00:00:00:01 drop;
+                		  
+
+                                  # Reject IPv6 from the VM.
+                                  iifname "agent-vm" meta nfproto ipv6 drop;
+
+                                  # Reject spoofed VM source addresses.
+                                  iifname "agent-vm" ip saddr != 192.168.100.2 drop;
+
+                                  # Block LAN, router, host, private, loopback, and link-local ranges.
+                                  iifname "agent-vm" ip daddr @PRIVATE4 drop;
+
+                                   # Permit external DNS only.
+                                  iifname "agent-vm" ip daddr { 1.1.1.1, 9.9.9.9 } udp dport 53 accept;
+                                  iifname "agent-vm" ip daddr { 1.1.1.1, 9.9.9.9 } tcp dport 53 accept;
+
+                                  # Permit HTTPS only.
+                                  iifname "agent-vm" ip protocol tcp tcp dport 443 accept;
+
+                                  # Deny every other VM-originated connection.
+                                  iifname "agent-vm" drop;
+
+
+                                                  }
+
+
+                                                }
+                        			table ip nat {
+                                  chain postrouting {
+                                    type nat hook postrouting priority srcnat;
+                                    policy accept;
+
+                                    oifname != "agent-vm"
+                                      ip saddr 192.168.100.2 masquerade;
+                                  }
+        			  }
+
       '';
     };
   };

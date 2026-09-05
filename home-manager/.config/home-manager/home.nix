@@ -31,7 +31,9 @@
     universal-android-debloater
 
     # Banking
-    #secp256k1 sparrow # electrum
+    secp256k1 
+    sparrow 
+    electrum
 
     # Bluetooth
     bluez
@@ -42,6 +44,7 @@
     rclone
 
     # Communication
+    fractal
     gajim
 
     # Configurations

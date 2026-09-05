@@ -56,7 +56,9 @@
 
         };
         elitebook = nixpkgs.lib.nixosSystem {
-          specialArgs = { inherit inputs system self; };
+          specialArgs = {
+            inherit inputs system self;
+          };
           modules = [
             ./elitebook-hardware-configuration.nix
             ./configuration.nix
@@ -75,7 +77,6 @@
             inherit
               inputs
               system
-              pkgs
               self
               ;
           };
