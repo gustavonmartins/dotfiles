@@ -34,7 +34,7 @@
   ];
   # boot.kernelPackages = pkgs.linuxPackages_6_12;
 
-  security.lockKernelModules = true;
+  security.lockKernelModules = false;
   boot.extraModprobeConfig = ''
     install esp4 ${pkgs.coreutils}/bin/false
     install esp6 ${pkgs.coreutils}/bin/false
